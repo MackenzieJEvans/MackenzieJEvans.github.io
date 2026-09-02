@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UNL Salary Search</title>
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --card: #ffffff;
+    --ink: #1a1a1a;
+    --muted: #666;
+    --border: #e2e2dd;
+    --accent: #c8102e; /* Nebraska scarlet */
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 32px 20px 80px; }
+  h1 { font-size: 1.6rem; margin: 0 0 4px; }
+  p.sub { margin: 0 0 24px; color: var(--muted); font-size: 0.95rem; }
+  .search-box {
+    position: sticky; top: 0; background: var(--bg);
+    padding: 12px 0; z-index: 5;
+  }
+  #q {
+    width: 100%; padding: 14px 16px; font-size: 1.05rem;
+    border: 2px solid var(--border); border-radius: 8px; background: var(--card);
+    outline: none;
+  }
+  #q:focus { border-color: var(--accent); }
+  #status { margin: 10px 2px 4px; color: var(--muted); font-size: 0.9rem; }
+  .results { display: grid; gap: 10px; }
+  .row {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px;
+    display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; align-items: baseline;
+  }
+  .name { font-weight: 600; font-size: 1.05rem; }
+  .salary { font-weight: 700; font-size: 1.1rem; white-space: nowrap; color: var(--accent); }
+  .meta { grid-column: 1 / -1; color: var(--muted); font-size: 0.9rem; }
+  .meta span { display: inline-block; margin-right: 14px; }
+  .empty { color: var(--muted); padding: 20px 2px; }
+  footer { margin-top: 40px; color: var(--muted); font-size: 0.82rem; }
+  mark { background: #ffe58a; padding: 0 1px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>UNL Salary Search</h1>
+  <p class="sub">Search University of Nebraska employees by name to see their listed salary.</p>
+
+  <div class="search-box">
+    <input id="q" type="search" placeholder="Type a name, e.g. Smith, John" autocomplete="off" autofocus disabled>
+    <div id="status">Loading data&hellip;</div>
+  </div>
+
+  <div class="results" id="results"></div>
+
+  <footer>
+    Source: <code>salaryunl.csv</code>. Salaries are as listed in the source file and may not reflect current pay.
+  </footer>
+</div>
+
+<script>
+(function () {
+  var qEl = document.getElementById('q');
+  var statusEl = document.getElementById('status');
+  var resultsEl = document.getElementById('results');
+  var MAX_RESULTS = 100;
+  var rows = [];
+
+  // Minimal RFC-4180-ish CSV parser (handles quoted fields, embedded commas, "" escapes)
+  function parseCSV(text) {
+    var out = [];
+    var field = '';
+    var record = [];
+    var inQuotes = false;
+    var i = 0, c;
+    for (; i < text.length; i++) {
+      c = text[i];
+      if (inQuotes) {
+        if (c === '"') {
+          if (text[i + 1] === '"') { field += '"'; i++; }
+          else { inQuotes = false; }
+        } else { field += c; }
+      } else {
+        if (c === '"') { inQuotes = true; }
+        else if (c === ',') { record.push(field); field = ''; }
+        else if (c === '\n' || c === '\r') {
+          if (c === '\r' && text[i + 1] === '\n') i++;
+          record.push(field); field = '';
+          if (record.length > 1 || record[0] !== '') out.push(record);
+          record = [];
+        } else { field += c; }
+      }
+    }
+    if (field !== '' || record.length) { record.push(field); out.push(record); }
+    return out;
+  }
+
+  function fmtSalary(s) {
+    var n = Number(String(s).replace(/[^0-9.]/g, ''));
+    if (!n) return s || '—';
+    return '$' + n.toLocaleString('en-US');
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (m) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m];
+    });
+  }
+
+  function highlight(text, term) {
+    var safe = esc(text);
+    if (!term) return safe;
+    var idx = text.toLowerCase().indexOf(term);
+    if (idx === -1) return safe;
+    return esc(text.slice(0, idx)) + '<mark>' + esc(text.slice(idx, idx + term.length)) +
+      '</mark>' + esc(text.slice(idx + term.length));
+  }
+
+  function render(matches, term) {
+    if (!term) { resultsEl.innerHTML = ''; statusEl.textContent = rows.length.toLocaleString() + ' records loaded. Start typing to search.'; return; }
+    if (!matches.length) { resultsEl.innerHTML = '<div class="empty">No matches for &ldquo;' + esc(term) + '&rdquo;.</div>'; statusEl.textContent = '0 matches'; return; }
+
+    var shown = matches.slice(0, MAX_RESULTS);
+    statusEl.textContent = matches.length.toLocaleString() + ' match' + (matches.length === 1 ? '' : 'es') +
+      (matches.length > MAX_RESULTS ? ' (showing first ' + MAX_RESULTS + ')' : '');
+
+    resultsEl.innerHTML = shown.map(function (r) {
+      return '<div class="row">' +
+        '<div class="name">' + highlight(r.name, term) + '</div>' +
+        '<div class="salary">' + esc(fmtSalary(r.salary)) + '</div>' +
+        '<div class="meta">' +
+          '<span>' + esc(r.campus) + '</span>' +
+          '<span>' + esc(r.title) + '</span>' +
+          (r.fte ? '<span>FTE ' + esc(r.fte) + '</span>' : '') +
+          (r.term ? '<span>' + esc(r.term) + '-mo</span>' : '') +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function search() {
+    var term = qEl.value.trim().toLowerCase();
+    if (term.length < 2) { render([], ''); return; }
+    var matches = [];
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i].search.indexOf(term) !== -1) matches.push(rows[i]);
+    }
+    matches.sort(function (a, b) { return a.name.localeCompare(b.name); });
+    render(matches, term);
+  }
+
+  var t;
+  qEl.addEventListener('input', function () { clearTimeout(t); t = setTimeout(search, 120); });
+
+  fetch('salaryunl.csv')
+    .then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    })
+    .then(function (text) {
+      var parsed = parseCSV(text);
+      var header = parsed.shift().map(function (h) { return h.trim().toLowerCase(); });
+      var iName = header.indexOf('name');
+      var iCampus = header.indexOf('campus');
+      var iTitle = header.indexOf('title');
+      var iTerm = header.indexOf('term');
+      var iFte = header.indexOf('fte');
+      var iSalary = header.indexOf('salary');
+
+      rows = parsed.filter(function (r) { return r[iName]; }).map(function (r) {
+        return {
+          name: (r[iName] || '').trim(),
+          campus: (r[iCampus] || '').trim(),
+          title: (r[iTitle] || '').trim(),
+          term: (r[iTerm] || '').trim(),
+          fte: (r[iFte] || '').trim(),
+          salary: (r[iSalary] || '').trim(),
+          search: (r[iName] || '').toLowerCase()
+        };
+      });
+
+      qEl.disabled = false;
+      statusEl.textContent = rows.length.toLocaleString() + ' records loaded. Start typing to search.';
+      qEl.focus();
+      if (qEl.value) search();
+    })
+    .catch(function (err) {
+      statusEl.textContent = 'Could not load data: ' + err.message;
+    });
+})();
+</script>
+</body>
+</html>
