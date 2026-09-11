@@ -1,0 +1,94 @@
+county,county_seat,population,land_area_sq_mi,pop_density_per_sq_mi,agriculture_pct,irrigated_crops_pct,dryland_crops_pct,pasture_grassland_pct,non_ag_pct,est_ag_sq_mi,est_irrigated_sq_mi,est_dryland_sq_mi,est_pasture_sq_mi,top_commodity,top_commodity_pct,second_commodity,second_commodity_pct,landuse_parts_sum_pct,data_quality_flag,source_url
+Adams,Hastings,31205,563.27,55.4,90.0,67.0,13.0,11.0,10.0,506.9,377.4,73.2,62.0,Corn,50,Soybeans,27,91.0,,https://nebraskacounties.org/nebraska-counties/county/adams.html
+Antelope,Neligh,6352,857.16,7.4,88.0,56.0,13.0,19.0,12.0,754.3,480.0,111.4,162.9,Corn,39,Soybeans,24,88.0,,https://nebraskacounties.org/nebraska-counties/county/antelope.html
+Arthur,Arthur,396,715.15,0.6,99.0,2.0,0.0,96.0,1.0,708.0,14.3,0.0,686.5,Livestock (grassland),94,Corn,1,98.0,,https://nebraskacounties.org/nebraska-counties/county/arthur.html
+Banner,Harrisburg,686,746.04,0.9,85.0,5.0,26.0,54.0,15.0,634.1,37.3,194.0,402.9,Livestock (grassland),67,Wheat,8,85.0,,https://nebraskacounties.org/nebraska-counties/county/banner.html
+Blaine,Brewster,458,710.69,0.6,95.0,3.0,0.0,92.0,5.0,675.2,21.3,0.0,653.8,Livestock (grassland),92,Alfalfa,1,95.0,,https://nebraskacounties.org/nebraska-counties/county/blaine.html
+Boone,Albion,5355,686.54,7.8,92.0,48.0,22.0,23.0,8.0,631.6,329.5,151.0,157.9,Corn,38,Soybeans,28,93.0,,https://nebraskacounties.org/nebraska-counties/county/boone.html
+Box Butte,Alliance,10842,1075.36,10.1,87.0,22.0,27.0,39.0,13.0,935.6,236.6,290.3,419.4,Livestock (grassland),48,Corn,15,88.0,,https://nebraskacounties.org/nebraska-counties/county/box-butte.html
+Boyd,Butte,1674,539.94,3.1,90.0,3.0,26.0,62.0,10.0,485.9,16.2,140.4,334.8,Livestock (grassland),60,Corn,12,91.0,,https://nebraskacounties.org/nebraska-counties/county/boyd.html
+Brown,Ainsworth,2826,1211.36,2.3,92.0,9.0,0.0,83.0,8.0,1114.5,109.0,0.0,1005.4,Livestock (grassland),80,Corn,5,92.0,,https://nebraskacounties.org/nebraska-counties/county/brown.html
+Buffalo,Kearney,51172,968.22,52.9,86.0,42.0,9.0,35.0,14.0,832.7,406.7,87.1,338.9,Corn,34,Soybeans,15,86.0,,https://nebraskacounties.org/nebraska-counties/county/buffalo.html
+Burt,Tekamah,6678,491.59,13.6,83.0,18.0,60.0,6.0,17.0,408.0,88.5,295.0,29.5,Corn,42,Soybeans,39,84.0,,https://nebraskacounties.org/nebraska-counties/county/burt.html
+Butler,David City,8507,584.89,14.5,86.0,36.0,39.0,11.0,14.0,503.0,210.6,228.1,64.3,Corn,41,Soybeans,33,86.0,,https://nebraskacounties.org/nebraska-counties/county/butler.html
+Cass,Plattsmouth,27657,557.35,49.6,76.0,1.0,71.0,4.0,24.0,423.6,5.6,395.7,22.3,Corn,41,Soybeans,33,76.0,,https://nebraskacounties.org/nebraska-counties/county/cass.html
+Cedar,Hartington,8373,740.24,11.3,88.0,31.0,43.0,14.0,12.0,651.4,229.5,318.3,103.6,Corn,41,Soybeans,27,88.0,,https://nebraskacounties.org/nebraska-counties/county/cedar.html
+Chase,Imperial,3718,894.42,4.2,95.0,33.0,18.0,44.0,5.0,849.7,295.2,161.0,393.5,,,,,95.0,,https://nebraskacounties.org/nebraska-counties/county/chase.html
+Cherry,Valentine,5561,5960.22,0.9,92.0,2.0,0.0,91.0,8.0,5483.4,119.2,0.0,5423.8,Livestock (grassland),89,Corn,1,93.0,,https://nebraskacounties.org/nebraska-counties/county/cherry.html
+Cheyenne,Sidney,9528,1196.01,8.0,84.0,8.0,52.0,24.0,16.0,1004.6,95.7,621.9,287.0,Livestock (grassland),37,Wheat,18,84.0,,https://nebraskacounties.org/nebraska-counties/county/cheyenne.html
+Clay,Clay Center,6170,572.29,10.8,82.0,62.0,13.0,6.0,18.0,469.3,354.8,74.4,34.3,Corn,48,Soybeans,27,81.0,,https://nebraskacounties.org/nebraska-counties/county/clay.html
+Colfax,Schuyler,10934,411.65,26.6,88.0,30.0,49.0,9.0,12.0,362.3,123.5,201.7,37.0,Corn,42,Soybeans,33,88.0,,https://nebraskacounties.org/nebraska-counties/county/colfax.html
+Cuming,West Point,8823,570.52,15.5,87.0,16.0,65.0,6.0,13.0,496.4,91.3,370.8,34.2,Corn,46,Soybeans,34,87.0,,https://nebraskacounties.org/nebraska-counties/county/cuming.html
+Custer,Broken Bow,10500,2575.59,4.1,97.0,17.0,9.0,71.0,3.0,2498.3,437.9,231.8,1828.7,Livestock (grassland),69,Corn,15,97.0,,https://nebraskacounties.org/nebraska-counties/county/custer.html
+Dakota,Dakota City,21687,264.28,82.1,78.0,10.0,57.0,11.0,22.0,206.1,26.4,150.6,29.1,Corn,38,Soybeans,34,78.0,,https://nebraskacounties.org/nebraska-counties/county/dakota.html
+Dawes,Chadron,7858,1396.39,5.6,88.0,2.0,13.0,72.0,12.0,1228.8,27.9,181.5,1005.4,Livestock (grassland),72,Alfalfa,6,87.0,,https://nebraskacounties.org/nebraska-counties/county/dawes.html
+Dawson,Lexington,24452,1013.6,24.1,90.0,45.0,4.0,41.0,10.0,912.2,456.1,40.5,415.6,Livestock (grassland),42,Corn,31,90.0,,https://nebraskacounties.org/nebraska-counties/county/dawson.html
+Deuel,Chappell,1862,439.85,4.2,93.0,8.0,61.0,24.0,7.0,409.1,35.2,268.3,105.6,Corn,23,Wheat,19,93.0,,https://nebraskacounties.org/nebraska-counties/county/deuel.html
+Dixon,Ponca,5602,476.11,11.8,91.0,12.0,65.0,15.0,9.0,433.3,57.1,309.5,71.4,Corn,41,Soybeans,36,92.0,,https://nebraskacounties.org/nebraska-counties/county/dixon.html
+Dodge,Fremont,38057,529.07,71.9,82.0,33.0,44.0,5.0,18.0,433.8,174.6,232.8,26.5,Corn,43,Soybeans,37,82.0,,https://nebraskacounties.org/nebraska-counties/county/dodge.html
+Douglas,Omaha,606406,326.41,1857.8,31.0,6.0,20.0,6.0,69.0,101.2,19.6,65.3,19.6,Corn,15,Soybeans,12,32.0,,https://nebraskacounties.org/nebraska-counties/county/douglas.html
+Dundy,Benkelman,1568,919.68,1.7,97.0,21.0,16.0,60.0,3.0,892.1,193.1,147.1,551.8,Livestock (grassland),62,Corn,17,97.0,,https://nebraskacounties.org/nebraska-counties/county/dundy.html
+Fillmore,Geneva,5458,575.37,9.5,92.0,66.0,20.0,6.0,8.0,529.3,379.7,115.1,34.5,Corn,51,Soybeans,33,92.0,,https://nebraskacounties.org/nebraska-counties/county/fillmore.html
+Franklin,Franklin,2795,575.82,4.9,94.0,31.0,18.0,45.0,5.5,541.3,178.5,103.6,259.1,Corn,28,Soybeans,17,94.0,,https://nebraskacounties.org/nebraska-counties/county/franklin.html
+Frontier,Stockville,2655,974.63,2.7,95.0,12.0,24.0,58.0,5.0,925.9,117.0,233.9,565.3,Livestock (grassland),59,Corn,20,94.0,,https://nebraskacounties.org/nebraska-counties/county/frontier.html
+Furnas,Beaver City,4524,719.13,6.3,93.0,15.0,41.0,37.0,6.0,668.8,107.9,294.8,266.1,Corn,27,Soybeans,14,93.0,,https://nebraskacounties.org/nebraska-counties/county/furnas.html
+Gage,Beatrice,21711,851.46,25.5,84.0,14.0,56.0,14.0,16.0,715.2,119.2,476.8,119.2,Soybeans,35,Corn,34,84.0,,https://nebraskacounties.org/nebraska-counties/county/gage.html
+Garden,Oshkosh,1804,1705.37,1.1,93.0,3.0,10.0,80.0,7.0,1586.0,51.2,170.5,1364.3,Livestock (grassland),81,Corn,5,93.0,,https://nebraskacounties.org/nebraska-counties/county/garden.html
+Garfield,Burwell,1710,569.33,3.0,95.5,6.0,2.0,87.0,4.5,543.7,34.2,11.4,495.3,Livestock (grassland),84,Corn,3,95.0,,https://nebraskacounties.org/nebraska-counties/county/garfield.html
+Gosper,Elwood,1803,458.16,3.9,95.0,32.0,18.0,45.0,5.0,435.3,146.6,82.5,206.2,Livestock (grassland),43,Corn,29,95.0,,https://nebraskacounties.org/nebraska-counties/county/gosper.html
+Grant,Hyannis,561,776.99,0.7,98.0,0.5,0.0,97.0,2.0,761.5,3.9,0.0,753.7,Livestock (grassland),90,,,97.5,,https://nebraskacounties.org/nebraska-counties/county/grant.html
+Greeley,Greeley,2154,569.81,3.8,96.0,30.0,8.0,57.0,4.0,547.0,170.9,45.6,324.8,Livestock (grassland),57,Corn,22,95.0,,https://nebraskacounties.org/nebraska-counties/county/greeley.html
+Hall,Grand Island,63633,546.39,116.5,82.0,63.0,5.0,14.0,18.0,448.0,344.2,27.3,76.5,Corn,51,Soybeans,15,82.0,,https://nebraskacounties.org/nebraska-counties/county/hall.html
+Hamilton,Aurora,9678,542.11,17.9,91.0,79.0,6.0,7.0,9.0,493.3,428.3,32.5,37.9,Corn,56,Soybeans,27,92.0,,https://nebraskacounties.org/nebraska-counties/county/hamilton.html
+Harlan,Alma,3000,553.47,5.4,89.0,29.0,28.0,32.0,11.0,492.6,160.5,155.0,177.1,Corn,31,Soybeans,19,89.0,,https://nebraskacounties.org/nebraska-counties/county/harlan.html
+Hayes,Hayes Center,821,713.06,1.2,93.0,15.0,22.0,57.0,7.0,663.1,107.0,156.9,406.4,Livestock (grassland),61,Corn,18,94.0,,https://nebraskacounties.org/nebraska-counties/county/hayes.html
+Hitchcock,Trenton,2467,709.94,3.5,94.0,7.0,40.0,47.0,6.0,667.3,49.7,284.0,333.7,Livestock (grassland),49,Corn,15,94.0,,https://nebraskacounties.org/nebraska-counties/county/hitchcock.html
+Holt,O'Neill,10067,2412.4,4.2,89.0,19.0,3.0,67.0,11.0,2147.0,458.4,72.4,1616.3,Livestock (grassland),65,Corn,12,89.0,,https://nebraskacounties.org/nebraska-counties/county/holt.html
+Hooker,Mullen,711,721.16,1.0,98.0,1.0,0.0,97.0,2.0,706.7,7.2,0.0,699.5,Livestock (grassland),97,,,98.0,,https://nebraskacounties.org/nebraska-counties/county/hooker.html
+Howard,St. Paul,6475,569.34,11.4,91.0,38.0,9.0,43.0,9.0,518.1,216.3,51.2,244.8,Livestock (grassland),42,Corn,29,90.0,,https://nebraskacounties.org/nebraska-counties/county/howard.html
+Jefferson,Fairbury,7240,570.18,12.7,90.0,28.0,35.0,27.0,10.0,513.2,159.7,199.6,153.9,Corn,31,Soybeans,28,90.0,,https://nebraskacounties.org/nebraska-counties/county/jefferson.html
+Johnson,Tecumseh,5290,376.08,14.1,81.0,11.0,44.0,26.0,19.0,304.6,41.4,165.5,97.8,Soybeans,28,Livestock (grassland),27,81.0,,https://nebraskacounties.org/nebraska-counties/county/johnson.html
+Kearney,Minden,6688,516.24,13.0,93.0,69.0,13.0,11.0,7.0,480.1,356.2,67.1,56.8,Corn,50,Soybeans,29,93.0,,https://nebraskacounties.org/nebraska-counties/county/kearney.html
+Keith,Ogallala,8335,1061.74,7.9,90.0,16.0,16.0,58.0,10.0,955.6,169.9,169.9,615.8,Livestock (grassland),59,Corn,19,90.0,,https://nebraskacounties.org/nebraska-counties/county/keith.html
+Keya Paha,Springview,769,773.08,1.0,97.0,6.0,7.0,84.0,3.0,749.9,46.4,54.1,649.4,Livestock (grassland),71,Corn,4,97.0,,https://nebraskacounties.org/nebraska-counties/county/keya-paha.html
+Kimball,Kimball,3434,951.94,3.6,84.0,7.0,39.0,38.0,16.0,799.6,66.6,371.3,361.7,Livestock (grassland),56,Wheat,13,84.0,,https://nebraskacounties.org/nebraska-counties/county/kimball.html
+Knox,Center,8391,1108.44,7.6,83.0,12.0,29.0,42.0,17.0,920.0,133.0,321.4,465.5,Livestock (grassland),41,Corn,20,83.0,,https://nebraskacounties.org/nebraska-counties/county/knox.html
+Lancaster,Lincoln,322608,837.56,385.2,66.0,4.0,49.0,13.0,34.0,552.8,33.5,410.4,108.9,Corn,27,Soybeans,27,66.0,,https://nebraskacounties.org/nebraska-counties/county/lancaster.html
+Lincoln,North Platte,34676,2564.14,13.5,92.0,15.0,6.0,71.0,8.0,2359.0,384.6,153.8,1820.5,Livestock (grassland),71,Corn,14,92.0,,https://nebraskacounties.org/nebraska-counties/county/lincoln.html
+Logan,Stapleton,716,570.7,1.3,98.0,9.0,3.0,86.0,2.0,559.3,51.4,17.1,490.8,Livestock (grassland),83,Corn,7,98.0,,https://nebraskacounties.org/nebraska-counties/county/logan.html
+Loup,Taylor,607,563.52,1.1,95.0,4.0,2.0,89.0,5.0,535.3,22.5,11.3,501.5,Livestock (grassland),90,Corn,2,95.0,,https://nebraskacounties.org/nebraska-counties/county/loup.html
+Madison,Madison,35585,572.62,62.1,84.0,34.0,39.0,11.0,16.0,481.0,194.7,223.3,63.0,Corn,40,Soybeans,31,84.0,,https://nebraskacounties.org/nebraska-counties/county/madison.html
+McPherson,Tryon,399,859.26,0.5,99.0,3.0,0.33,96.0,1.0,850.7,25.8,2.8,824.9,Livestock (grassland),95,Corn,1,99.33,,https://nebraskacounties.org/nebraska-counties/county/mcpherson.html
+Merrick,Central City,7668,487.0,15.7,87.0,60.0,5.0,21.0,13.0,423.7,292.2,24.4,102.3,Corn,42,Soybeans,20,86.0,,https://nebraskacounties.org/nebraska-counties/county/merrick.html
+Morrill,Bridgeport,4555,1424.02,3.2,93.0,14.0,7.0,72.0,7.0,1324.3,199.4,99.7,1025.3,Livestock (grassland),75,Corn,9,93.0,,https://nebraskacounties.org/nebraska-counties/county/morrill.html
+Nance,Fullerton,3380,441.6,7.7,85.0,28.0,26.0,31.0,15.0,375.4,123.6,114.8,136.9,Corn,31,Livestock (grassland),30,85.0,,https://nebraskacounties.org/nebraska-counties/county/nance.html
+Nemaha,Auburn,7074,407.38,17.4,78.0,5.0,66.0,8.0,22.0,317.8,20.4,268.9,32.6,Soybeans,38,Corn,33,79.0,,https://nebraskacounties.org/nebraska-counties/county/nemaha.html
+Nuckolls,Nelson,4095,575.16,7.1,92.0,20.0,43.0,29.0,8.0,529.1,115.0,247.3,166.8,Corn,36,Soybeans,22,92.0,,https://nebraskacounties.org/nebraska-counties/county/nuckolls.html
+Otoe,Nebraska City,15912,615.66,25.8,80.0,2.0,69.0,10.0,20.0,492.5,12.3,424.8,61.6,Soybeans,36,Corn,36,81.0,,https://nebraskacounties.org/nebraska-counties/county/otoe.html
+Pawnee,Pawnee City,2544,431.08,5.9,86.0,1.0,50.0,35.0,9.0,370.7,4.3,215.5,150.9,Soybeans,26,Corn,24,86.0,,https://nebraskacounties.org/nebraska-counties/county/pawnee.html
+Perkins,Grant,2858,883.31,3.2,95.0,24.0,55.0,16.0,5.0,839.1,212.0,485.8,141.3,Corn,47,Livestock (grassland),19,95.0,,https://nebraskacounties.org/nebraska-counties/county/perkins.html
+Phelps,Holdrege,8968,539.79,16.6,91.0,75.0,6.0,10.0,9.0,491.2,404.8,32.4,54.0,Corn,53,Soybeans,26,91.0,,https://nebraskacounties.org/nebraska-counties/county/phelps.html
+Pierce,Pierce,7317,573.25,12.8,89.5,42.0,32.0,15.5,10.5,513.1,240.8,183.4,88.9,Corn,41,Soybeans,29,89.5,,https://nebraskacounties.org/nebraska-counties/county/pierce.html
+Platte,Columbus,34296,674.05,50.9,85.0,50.0,27.0,8.0,15.0,572.9,337.0,182.0,53.9,Corn,47,Soybeans,30,85.0,,https://nebraskacounties.org/nebraska-counties/county/platte.html
+Polk,Osceola,5214,438.67,11.9,91.0,65.0,14.0,11.0,9.0,399.2,285.1,61.4,48.3,Corn,46,Soybeans,32,90.0,,https://nebraskacounties.org/nebraska-counties/county/polk.html
+Red Willow,McCook,10702,717.01,14.9,92.0,12.0,39.0,41.0,8.0,659.6,86.0,279.6,294.0,Livestock (grassland),42,Corn,24,92.0,,https://nebraskacounties.org/nebraska-counties/county/red-willow.html
+Richardson,Falls City,7871,551.84,14.3,78.0,3.0,62.0,12.0,22.0,430.4,16.6,342.1,66.2,Corn,33,Soybeans,33,77.0,,https://nebraskacounties.org/nebraska-counties/county/richardson.html
+Rock,Bassett,1262,1008.29,1.3,92.5,8.0,1.0,84.0,7.5,932.7,80.7,10.1,847.0,Livestock (grassland),76,Corn,4,93.0,,https://nebraskacounties.org/nebraska-counties/county/rock.html
+Saline,Wilber,14292,574.06,24.9,88.0,31.0,43.0,14.0,12.0,505.2,178.0,246.8,80.4,Corn,38,Soybeans,34,88.0,,https://nebraskacounties.org/nebraska-counties/county/saline.html
+Sarpy,Papillion,190604,238.1,800.5,44.0,4.0,37.0,4.0,52.0,104.8,9.5,88.1,9.5,Soybeans,24,Corn,21,45.0,,https://nebraskacounties.org/nebraska-counties/county/sarpy.html
+Saunders,Wahoo,22278,784.93,28.4,89.0,23.0,51.0,6.0,11.0,698.6,180.5,400.3,47.1,Corn,40,Soybeans,36,80.0,stated parts sum to 80.0 but ag total is 89.0,https://nebraskacounties.org/nebraska-counties/county/saunders.html
+Scotts Bluff,Gering,36084,739.61,48.8,81.0,35.0,6.0,40.0,19.0,599.1,258.9,44.4,295.8,Livestock (grassland),46,Corn,19,81.0,,https://nebraskacounties.org/nebraska-counties/county/scotts-bluff.html
+Seward,Seward,17609,571.43,30.8,83.0,40.0,32.0,12.0,16.0,474.3,228.6,182.9,68.6,Corn,40,Soybeans,32,84.0,,https://nebraskacounties.org/nebraska-counties/county/seward.html
+Sheridan,Rushville,5127,2440.89,2.1,94.0,4.0,9.0,81.0,6.0,2294.4,97.6,219.7,1977.1,Livestock (grassland),77,Alfalfa,3,94.0,,https://nebraskacounties.org/nebraska-counties/county/sheridan.html
+Sherman,Loup City,2959,565.85,5.2,92.0,25.0,12.0,55.0,8.0,520.6,141.5,67.9,311.2,Livestock (grassland),56,Corn,22,92.0,,https://nebraskacounties.org/nebraska-counties/county/sherman.html
+Sioux,Harrison,1135,2066.72,0.5,82.0,3.0,3.0,76.0,18.0,1694.7,62.0,62.0,1570.7,Livestock (grassland),90,Alfalfa,2,82.0,,https://nebraskacounties.org/nebraska-counties/county/sioux.html
+Stanton,Stanton,5842,427.61,13.7,85.0,14.0,57.0,15.0,11.0,363.5,59.9,243.7,64.1,Corn,38,Soybeans,29,86.0,,https://nebraskacounties.org/nebraska-counties/county/stanton.html
+Thayer,Hebron,5034,573.81,8.8,90.0,44.0,29.0,16.0,10.0,516.4,252.5,166.4,91.8,Corn,42,Soybeans,29,89.0,,https://nebraskacounties.org/nebraska-counties/county/thayer.html
+Thomas,Thedford,669,712.58,0.9,80.5,0.75,0.0,80.75,19.5,573.6,5.3,0.0,575.4,Livestock (grassland),96,Alfalfa,0.25,81.5,,https://nebraskacounties.org/nebraska-counties/county/thomas.html
+Thurston,Pender,6773,393.58,17.2,69.0,5.0,60.0,3.0,31.0,271.6,19.7,236.1,11.8,Corn,40,Soybeans,32,68.0,,https://nebraskacounties.org/nebraska-counties/county/thurston.html
+Valley,Ord,4059,568.11,7.1,93.5,29.0,8.5,56.0,6.25,531.2,164.8,48.3,318.1,Corn,21,Soybeans,10,93.5,,https://nebraskacounties.org/nebraska-counties/county/valley.html
+Washington,Blair,20865,389.96,53.5,77.0,7.0,61.0,10.0,23.0,300.3,27.3,237.9,39.0,Corn,35,Soybeans,33,78.0,,https://nebraskacounties.org/nebraska-counties/county/washington.html
+Wayne,Wayne,9697,442.92,21.9,91.0,17.0,67.0,7.0,9.0,403.1,75.3,296.8,31.0,Corn,46,Soybeans,36,91.0,,https://nebraskacounties.org/nebraska-counties/county/wayne.html
+Webster,Red Cloud,3395,574.91,5.9,90.0,19.0,32.0,40.0,10.0,517.4,109.2,184.0,230.0,Corn,27,Soybeans,18,91.0,,https://nebraskacounties.org/nebraska-counties/county/webster.html
+Wheeler,Bartlett,774,575.18,1.3,95.0,17.0,1.0,77.0,5.0,546.4,97.8,5.8,442.9,Livestock (grassland),74,Corn,10,95.0,,https://nebraskacounties.org/nebraska-counties/county/wheeler.html
+York,York,14125,572.51,24.7,90.0,79.0,7.0,4.0,10.0,515.3,452.3,40.1,22.9,Corn,52,Soybeans,34,90.0,,https://nebraskacounties.org/nebraska-counties/county/york.html
