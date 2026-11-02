@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mackenzie Evans</title>
+<meta name="description" content="Mackenzie Evans — journalism student, writer, and data storyteller in Lincoln, NE.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000000;
+    --panel: #121212;
+    --border: #2a2a2a;
+    --ink: #f2f2f2;
+    --muted: #a3a3a3;
+    --accent: #e7e7e7;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+  }
+  body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1.6;
+  }
+  h1, h2, h3 {
+    font-family: "Space Grotesk", "Inter", sans-serif;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  a { color: var(--ink); }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 80px; }
+
+  header.hero {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 48px;
+  }
+  header.hero h1 { font-size: clamp(2rem, 6vw, 2.8rem); margin: 0; letter-spacing: -0.01em; }
+  header.hero .tagline { font-size: 1.05rem; color: var(--muted); margin: 0; }
+  header.hero .location { font-size: 0.9rem; color: var(--muted); margin: 0; }
+
+  nav.links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+  }
+  nav.links a {
+    text-decoration: none;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 7px 16px;
+    font-size: 0.85rem;
+    color: var(--ink);
+    transition: border-color .15s ease, background .15s ease;
+  }
+  nav.links a:hover { border-color: var(--accent); background: var(--panel); }
+
+  section { margin-bottom: 48px; }
+  section h2 {
+    font-size: 1.3rem;
+    margin: 0 0 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  p.lead { color: var(--ink); font-size: 1rem; }
+
+  .entry { margin-bottom: 26px; }
+  .entry:last-child { margin-bottom: 0; }
+  .entry-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+  .entry-title { font-weight: 600; font-size: 1.02rem; color: var(--ink); }
+  .entry-org { color: var(--muted); font-size: 0.92rem; }
+  .entry-date { color: var(--muted); font-size: 0.85rem; white-space: nowrap; }
+  .entry ul {
+    margin: 10px 0 0;
+    padding-left: 20px;
+    color: var(--muted);
+  }
+  .entry li { margin-bottom: 5px; font-size: 0.95rem; }
+  .entry li::marker { color: var(--border); }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .skill-group h3 {
+    font-size: 0.95rem;
+    margin: 0 0 6px;
+    color: var(--ink);
+  }
+  .skill-group p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .projects-grid {
+    display: grid;
+    gap: 14px;
+  }
+  .project-card {
+    display: block;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    text-decoration: none;
+    background: var(--panel);
+    transition: border-color .15s ease;
+  }
+  .project-card:hover { border-color: var(--accent); }
+  .project-card .p-title { font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .project-card .p-desc { color: var(--muted); font-size: 0.9rem; }
+
+  footer {
+    color: var(--muted);
+    font-size: 0.82rem;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    margin-top: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <h1>Mackenzie Evans</h1>
+    <p class="tagline">Journalism student &amp; data storyteller</p>
+    <p class="location">Lincoln, NE</p>
+    <nav class="links">
+      <a href="mailto:emackenzie375@gmail.com">Email</a>
+      <a href="https://www.linkedin.com/in/mackenzie-j-evans-9a161419a" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/MackenzieJEvans" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://mackenziejevans.wordpress.com/" target="_blank" rel="noopener">Blog</a>
+    </nav>
+  </header>
+
+  <section id="about">
+    <h2>About</h2>
+    <p class="lead">
+      I'm a journalism student at the University of Nebraska&ndash;Lincoln, minoring in Food
+      Science and Technology. I write in AP style, report on data, and build the tools and
+      visuals that help a story land &mdash; from interviewing sources and shooting photos on a
+      DSLR to pulling numbers apart in R and Datawrapper.
+    </p>
+  </section>
+
+  <section id="experience">
+    <h2>Work Experience</h2>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div>
+          <div class="entry-title">Nebraska News Service</div>
+          <div class="entry-org">University of Nebraska&ndash;Lincoln &middot; Lincoln, NE</div>
+        </div>
+        <div class="entry-date">August 2025 &ndash; Present</div>
+      </div>
+      <ul>
+        <li>Write articles in AP style</li>
+        <li>Interview sources in person and over the phone</li>
+        <li>Use RStudio, Excel and Datawrapper to present and analyze data</li>
+        <li>Use a DSLR camera to take photographs</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div>
+          <div class="entry-title">Student Library Assistant</div>
+          <div class="entry-org">University of Nebraska&ndash;Lincoln &middot; Lincoln, NE</div>
+        </div>
+        <div class="entry-date">September 2021 &ndash; September 2024</div>
+      </div>
+      <ul>
+        <li>Assisted patrons</li>
+        <li>Checked in and out library materials and managed hold requests</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div>
+          <div class="entry-title">Social Media Manager</div>
+          <div class="entry-org">Love Memorial Hall &middot; Lincoln, NE</div>
+        </div>
+        <div class="entry-date">February 2023 &ndash; May 2023</div>
+      </div>
+      <ul>
+        <li>Raised recruitment by spreading awareness of the dorm's existence and benefits through weekly social media posts on Love Memorial Hall's (@lovememorialhall) Instagram page</li>
+        <li>Designed a recruiting poster to display around campus using Canva</li>
+        <li>Assisted with events and regular cooperative living activities</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div>
+          <div class="entry-title">Public Relations Manager</div>
+          <div class="entry-org">Tekamah Library Foundation &middot; Tekamah, NE</div>
+        </div>
+        <div class="entry-date">July 2020 &ndash; June 2021</div>
+      </div>
+      <ul>
+        <li>Managed the Facebook page for the Tekamah Library Foundation</li>
+        <li>Advertised library events and services</li>
+        <li>Assisted with and photographed library events</li>
+        <li>Communicated with patrons</li>
+        <li>Used Canva to create posts</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="education">
+    <h2>Education</h2>
+    <div class="entry">
+      <div class="entry-head">
+        <div>
+          <div class="entry-title">University of Nebraska&ndash;Lincoln</div>
+          <div class="entry-org">Lincoln, NE</div>
+        </div>
+        <div class="entry-date">August 2021 &ndash; Present</div>
+      </div>
+      <ul>
+        <li>Major: Journalism</li>
+        <li>Minor: Food Science and Technology</li>
+        <li>Courses: Data Journalism, Statistics, Multimedia, Information Gathering, Editing and Reporting, Capstone</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="skills">
+    <h2>Skills</h2>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <h3>Journalism</h3>
+        <p>AP style, scientific writing, data journalism, SEO, Blox digital, Microsoft Office</p>
+      </div>
+      <div class="skill-group">
+        <h3>Public Relations</h3>
+        <p>Social media management, consumer analytics</p>
+      </div>
+      <div class="skill-group">
+        <h3>Data Analysis &amp; Presentation</h3>
+        <p>RStudio, Excel, Datawrapper, SQL, OpenRefine</p>
+      </div>
+      <div class="skill-group">
+        <h3>Visual Communications</h3>
+        <p>Adobe, Canva, DSLR photography, photo/video editing</p>
+      </div>
+      <div class="skill-group">
+        <h3>Web Management</h3>
+        <p>Visual Studio Code (HTML/CSS), Wix, WordPress</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <h2>Projects</h2>
+    <div class="projects-grid">
+      <a class="project-card" href="salary_search/">
+        <div class="p-title">UNL Salary Search</div>
+        <div class="p-desc">A searchable tool for looking up University of Nebraska employee salaries.</div>
+      </a>
+      <a class="project-card" href="Cameron_the_Capitol_Cat_Game/">
+        <div class="p-title">Cameron the Capitol Cat</div>
+        <div class="p-desc">A Flappy Bird&ndash;style game starring Cameron, the Nebraska State Capitol cat.</div>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    &copy; <span id="year"></span> Mackenzie Evans
+  </footer>
+</div>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
