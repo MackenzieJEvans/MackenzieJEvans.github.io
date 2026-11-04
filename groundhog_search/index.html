@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Groundhog Day Predictions Search</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --card: #1c202a;
+    --card-hover: #232835;
+    --ink: #e8e9ec;
+    --muted: #9aa1b2;
+    --border: #2b2f3a;
+    --accent: #f4a93c;
+    --accent-ink: #2a1a05;
+    --spring: #4fd68a;
+    --winter: #5eb3f6;
+    --unknown: #8a8f9c;
+    --focus: #f4a93c;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.45;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 24px 18px 60px; }
+  header h1 { font-size: 1.5rem; margin: 0 0 4px; display: flex; align-items: center; gap: 10px; }
+  header p.sub { margin: 0 0 20px; color: var(--muted); font-size: 0.92rem; }
+
+  .panel {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px; position: sticky; top: 0; z-index: 5;
+  }
+  #q {
+    width: 100%; padding: 12px 14px; font-size: 1rem;
+    border: 2px solid var(--border); border-radius: 8px; background: var(--card); color: var(--ink);
+    outline: none; margin-bottom: 10px;
+  }
+  #q::placeholder { color: var(--muted); }
+  #q:focus { border-color: var(--focus); }
+
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; }
+  .filters select {
+    flex: 1 1 150px; min-width: 130px;
+    padding: 9px 10px; font-size: 0.9rem;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: var(--card); color: var(--ink); outline: none;
+  }
+  .filters select:focus { border-color: var(--focus); }
+  #clear {
+    flex: 0 0 auto; padding: 9px 14px; font-size: 0.9rem; cursor: pointer;
+    border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--muted);
+  }
+  #clear:hover { color: var(--ink); border-color: var(--muted); }
+
+  #status { margin: 12px 2px 14px; color: var(--muted); font-size: 0.88rem; }
+  #status b { color: var(--ink); }
+
+  .results { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); }
+
+  .cg { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; cursor: pointer; transition: background .12s, border-color .12s; }
+  .cg:hover { background: var(--card-hover); border-color: #3a4051; }
+  .cg-top { display: flex; gap: 12px; }
+  .cg-photo {
+    width: 56px; height: 56px; border-radius: 8px; object-fit: cover; flex: 0 0 auto;
+    background: var(--border);
+  }
+  .cg-photo-fallback {
+    width: 56px; height: 56px; border-radius: 8px; flex: 0 0 auto;
+    background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
+  }
+  .cg-main { flex: 1 1 auto; min-width: 0; }
+  .cg-name { font-weight: 700; font-size: 1.02rem; }
+  .cg-loc { color: var(--muted); font-size: 0.85rem; margin-top: 2px; }
+  .cg-type { color: var(--muted); font-size: 0.8rem; margin-top: 2px; font-style: italic; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 9px; border-radius: 999px; font-size: 0.78rem; font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge-year { background: var(--border); color: var(--ink); }
+  .badge-spring { background: rgba(79,214,138,0.16); color: var(--spring); }
+  .badge-winter { background: rgba(94,179,246,0.16); color: var(--winter); }
+  .badge-unknown { background: rgba(138,143,156,0.16); color: var(--unknown); }
+
+  .cg-bottom { margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .cg-details { margin-top: 8px; color: var(--ink); font-size: 0.88rem; opacity: 0.9; }
+
+  mark { background: var(--accent); color: var(--accent-ink); padding: 0 1px; border-radius: 2px; }
+
+  .history { margin-top: 12px; border-top: 1px dashed var(--border); padding-top: 10px; display: none; }
+  .cg.open .history { display: block; }
+  .history-title { font-size: 0.78rem; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; }
+  .history-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .hchip { font-size: 0.76rem; padding: 3px 7px; border-radius: 6px; background: var(--panel); border: 1px solid var(--border); white-space: nowrap; }
+  .hchip.s { border-color: rgba(79,214,138,0.4); }
+  .hchip.w { border-color: rgba(94,179,246,0.4); }
+  .cg-link { font-size: 0.78rem; color: var(--accent); text-decoration: none; }
+  .cg-link:hover { text-decoration: underline; }
+
+  .empty { color: var(--muted); padding: 30px 4px; text-align: center; }
+  footer { margin-top: 36px; color: var(--muted); font-size: 0.8rem; }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🦫 Groundhog Day Predictions</h1>
+    <p class="sub">Search weather predictions from groundhogs (and a few other critters) across North America. Click any card to see its full history.</p>
+  </header>
+
+  <div class="panel">
+    <input id="q" type="search" placeholder="Search by name, city, state, or animal…" autocomplete="off" disabled>
+    <div class="filters">
+      <select id="fState" disabled><option value="">All States / Provinces</option></select>
+      <select id="fAnimal" disabled><option value="">All Animals</option></select>
+      <select id="fPred" disabled>
+        <option value="">All Predictions</option>
+        <option value="0">☀️ Early Spring</option>
+        <option value="1">❄️ Long Winter</option>
+        <option value="-1">❓ Unknown</option>
+      </select>
+      <select id="fYear" disabled><option value="">All Years</option></select>
+      <button id="clear" type="button">Clear</button>
+    </div>
+  </div>
+
+  <div id="status">Loading predictions…</div>
+  <div class="results" id="results"></div>
+
+  <footer>
+    Data: <a href="https://the-art-of-data-journalism.github.io/tutorial-data/groundhogs/predictions.csv" target="_blank" rel="noopener">predictions.csv</a>,
+    sourced from <a href="https://groundhog-day.com" target="_blank" rel="noopener">groundhog-day.com</a>.
+  </footer>
+</div>
+
+<script>
+(function () {
+  var qEl = document.getElementById('q');
+  var stateEl = document.getElementById('fState');
+  var animalEl = document.getElementById('fAnimal');
+  var predEl = document.getElementById('fPred');
+  var yearEl = document.getElementById('fYear');
+  var clearBtn = document.getElementById('clear');
+  var statusEl = document.getElementById('status');
+  var resultsEl = document.getElementById('results');
+  var MAX_RESULTS = 150;
+
+  var critters = {}; // slug -> {name, city, region, country, type, desc, image, source, history:[{year,shadow,details}]}
+  var latestYear = null;
+
+  function parseCSV(text) {
+    var out = [];
+    var field = '';
+    var record = [];
+    var inQuotes = false;
+    var i = 0, c;
+    for (; i < text.length; i++) {
+      c = text[i];
+      if (inQuotes) {
+        if (c === '"') {
+          if (text[i + 1] === '"') { field += '"'; i++; }
+          else { inQuotes = false; }
+        } else { field += c; }
+      } else {
+        if (c === '"') { inQuotes = true; }
+        else if (c === ',') { record.push(field); field = ''; }
+        else if (c === '\n' || c === '\r') {
+          if (c === '\r' && text[i + 1] === '\n') i++;
+          record.push(field); field = '';
+          if (record.length > 1 || record[0] !== '') out.push(record);
+          record = [];
+        } else { field += c; }
+      }
+    }
+    if (field !== '' || record.length) { record.push(field); out.push(record); }
+    return out;
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (m) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m];
+    });
+  }
+
+  function highlight(text, term) {
+    var safe = esc(text);
+    if (!term) return safe;
+    var idx = String(text).toLowerCase().indexOf(term);
+    if (idx === -1) return safe;
+    return esc(String(text).slice(0, idx)) + '<mark>' + esc(String(text).slice(idx, idx + term.length)) +
+      '</mark>' + esc(String(text).slice(idx + term.length));
+  }
+
+  function predLabel(shadow) {
+    if (shadow === 1) return { cls: 'winter', txt: '❄️ Long Winter' };
+    if (shadow === 0) return { cls: 'spring', txt: '☀️ Early Spring' };
+    return { cls: 'unknown', txt: '❓ Unknown' };
+  }
+
+  function fillSelect(sel, values) {
+    values.sort().forEach(function (v) {
+      var opt = document.createElement('option');
+      opt.value = v; opt.textContent = v;
+      sel.appendChild(opt);
+    });
+  }
+
+  function render() {
+    var term = qEl.value.trim().toLowerCase();
+    var stateFilter = stateEl.value;
+    var animalFilter = animalEl.value;
+    var predFilter = predEl.value; // '', '0', '1', '-1'
+    var yearFilter = yearEl.value; // '', or a year string
+
+    var matches = [];
+    Object.keys(critters).forEach(function (slug) {
+      var c = critters[slug];
+      if (stateFilter && c.region !== stateFilter) return;
+      if (animalFilter && c.type !== animalFilter) return;
+
+      var history = c.history;
+      if (yearFilter) {
+        history = history.filter(function (h) { return String(h.year) === yearFilter; });
+      }
+      if (predFilter !== '') {
+        history = history.filter(function (h) { return String(h.shadow) === predFilter; });
+      }
+      if (!history.length) return;
+
+      if (term) {
+        var hay = (c.name + ' ' + c.city + ' ' + c.region + ' ' + c.country + ' ' + c.type).toLowerCase();
+        if (hay.indexOf(term) === -1) return;
+      }
+
+      // pick the most relevant entry to show on the card (prefer selected year, else latest)
+      var shown = history[0];
+      history.forEach(function (h) { if (h.year > shown.year) shown = h; });
+
+      matches.push({ slug: slug, c: c, shown: shown });
+    });
+
+    matches.sort(function (a, b) { return a.c.name.localeCompare(b.c.name); });
+
+    var activeYearLabel = yearFilter ? yearFilter : 'all years';
+    if (!matches.length) {
+      resultsEl.innerHTML = '<div class="empty">No groundhogs match those filters.</div>';
+      statusEl.innerHTML = '<b>0</b> matches';
+      return;
+    }
+
+    var shownList = matches.slice(0, MAX_RESULTS);
+    statusEl.innerHTML = '<b>' + matches.length.toLocaleString() + '</b> of ' + Object.keys(critters).length + ' critters' +
+      ' &middot; showing ' + activeYearLabel +
+      (matches.length > MAX_RESULTS ? ' (first ' + MAX_RESULTS + ' shown)' : '');
+
+    resultsEl.innerHTML = shownList.map(function (m) {
+      var c = m.c, s = m.shown;
+      var pl = predLabel(s.shadow);
+      var photo = c.image
+        ? '<img class="cg-photo" src="' + esc(c.image) + '" alt="" loading="lazy" onerror="this.outerHTML=\'<div class=&quot;cg-photo-fallback&quot;>🦫</div>\'">'
+        : '<div class="cg-photo-fallback">🦫</div>';
+
+      var historyRows = c.history.slice().sort(function (a, b) { return b.year - a.year; }).map(function (h) {
+        var hp = predLabel(h.shadow);
+        return '<span class="hchip ' + (h.shadow === 0 ? 's' : h.shadow === 1 ? 'w' : '') + '">' +
+          h.year + ' ' + (h.shadow === 0 ? '☀️' : h.shadow === 1 ? '❄️' : '❓') + '</span>';
+      }).join('');
+
+      return '<div class="cg" data-slug="' + esc(c.name) + '">' +
+        '<div class="cg-top">' +
+          photo +
+          '<div class="cg-main">' +
+            '<div class="cg-name">' + highlight(c.name, term) + '</div>' +
+            '<div class="cg-loc">' + highlight(c.city, term) + ', ' + highlight(c.region, term) + '</div>' +
+            '<div class="cg-type">' + highlight(c.type, term) + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="cg-bottom">' +
+          '<span class="badge badge-year">' + s.year + '</span>' +
+          '<span class="badge badge-' + pl.cls + '">' + pl.txt + '</span>' +
+        '</div>' +
+        (s.details ? '<div class="cg-details">“' + esc(s.details) + '”</div>' : '') +
+        '<div class="history">' +
+          '<div class="history-title">Prediction history (' + c.history.length + ')</div>' +
+          '<div class="history-row">' + historyRows + '</div>' +
+          (c.source ? '<div style="margin-top:8px"><a class="cg-link" href="' + esc(c.source) + '" target="_blank" rel="noopener">Source ↗</a></div>' : '') +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    Array.prototype.forEach.call(resultsEl.querySelectorAll('.cg'), function (card) {
+      card.addEventListener('click', function () { card.classList.toggle('open'); });
+    });
+  }
+
+  var t;
+  function scheduleRender() { clearTimeout(t); t = setTimeout(render, 90); }
+
+  qEl.addEventListener('input', scheduleRender);
+  stateEl.addEventListener('change', render);
+  animalEl.addEventListener('change', render);
+  predEl.addEventListener('change', render);
+  yearEl.addEventListener('change', render);
+  clearBtn.addEventListener('click', function () {
+    qEl.value = '';
+    stateEl.value = '';
+    animalEl.value = '';
+    predEl.value = '';
+    yearEl.value = '';
+    render();
+  });
+
+  fetch('predictions.csv')
+    .then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    })
+    .then(function (text) {
+      var parsed = parseCSV(text);
+      var header = parsed.shift().map(function (h) { return h.trim(); });
+      var idx = {};
+      header.forEach(function (h, i) { idx[h] = i; });
+
+      var regions = {}, types = {}, years = {};
+
+      parsed.forEach(function (row) {
+        if (!row[idx.slug]) return;
+        var slug = row[idx.slug];
+        var year = parseInt(row[idx.year], 10);
+        var shadowRaw = row[idx.shadow];
+        var shadow = shadowRaw === 'NA' || shadowRaw === '' ? -1 : parseInt(shadowRaw, 10);
+        var details = (row[idx.details] || '').trim();
+
+        if (!critters[slug]) {
+          critters[slug] = {
+            name: row[idx.name] || '',
+            city: row[idx.city] || '',
+            region: row[idx.region] || '',
+            country: row[idx.country] || '',
+            type: row[idx.type] || '',
+            desc: (row[idx.description] || '').trim(),
+            image: (row[idx.image] || '').trim(),
+            source: (row[idx.source] || '').trim(),
+            history: []
+          };
+        }
+        critters[slug].history.push({ year: year, shadow: shadow, details: details });
+
+        if (critters[slug].region) regions[critters[slug].region] = true;
+        if (critters[slug].type) types[critters[slug].type] = true;
+        years[year] = true;
+        if (!latestYear || year > latestYear) latestYear = year;
+      });
+
+      fillSelect(stateEl, Object.keys(regions));
+      fillSelect(animalEl, Object.keys(types));
+      Object.keys(years).sort(function (a, b) { return b - a; }).forEach(function (y) {
+        var opt = document.createElement('option');
+        opt.value = y; opt.textContent = y;
+        yearEl.appendChild(opt);
+      });
+      if (latestYear) yearEl.value = String(latestYear);
+
+      qEl.disabled = false; stateEl.disabled = false; animalEl.disabled = false;
+      predEl.disabled = false; yearEl.disabled = false;
+
+      render();
+    })
+    .catch(function (err) {
+      statusEl.textContent = 'Could not load data: ' + err.message;
+    });
+})();
+</script>
+</body>
+</html>
