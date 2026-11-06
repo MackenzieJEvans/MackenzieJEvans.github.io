@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UNL Majors Tracker: Enrollment by Major, Fall 2016–2025</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --surface: #ffffff;
+    --panel: #f6f6f6;
+    --rule: #dddddd;
+    --grid: #ececec;
+    --ink: #222222;
+    --ink-2: #555555;
+    --ink-3: #767676;
+    --nav: #333333;
+    --red: #ba1f1f;
+    --red-dark: #8f1717;
+    --up: #1d7a3e;
+    --down: #ba1f1f;
+    --s1: #ba1f1f;   /* primary major */
+    --s2: #2a78d6;   /* compare 1 */
+    --s3: #eda100;   /* compare 2 */
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--surface); color: var(--ink); }
+  body { font-family: "Open Sans", Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.5; }
+  h1, h2, h3, .cond { font-family: "Roboto Condensed", "Arial Narrow", Arial, sans-serif; font-weight: 700; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px 28px; }
+
+  /* Masthead strip, echoing the site's dark nav + red rule */
+  .masthead { background: var(--nav); border-bottom: 4px solid var(--red); color: #fff; }
+  .masthead .wrap { padding-top: 14px; padding-bottom: 14px; }
+  .kicker { display: inline-block; background: var(--red); color: #fff; font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .06em; padding: 2px 8px; border-radius: 2px; }
+  .masthead h1 { margin: 6px 0 2px; font-size: 30px; line-height: 1.1; }
+  .masthead p { margin: 0; color: rgba(255,255,255,.8); font-size: 14px; }
+
+  /* Filter row */
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; padding: 16px 0 12px;
+             border-bottom: 1px solid var(--rule); position: sticky; top: 0; background: var(--surface); z-index: 20; }
+  .field { display: flex; flex-direction: column; gap: 3px; }
+  .field label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-2); }
+  .field.search { flex: 1 1 280px; position: relative; }
+  input[type=search], select {
+    font: inherit; font-size: 15px; color: var(--ink); background: #fff;
+    border: 1px solid #bbb; border-radius: 3px; padding: 8px 10px; min-height: 40px;
+  }
+  input[type=search]:focus, select:focus, button:focus-visible { outline: 2px solid var(--red); outline-offset: 1px; }
+  select { min-width: 150px; }
+  .btn { font: inherit; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+         border: 1px solid var(--red); background: var(--red); color: #fff; border-radius: 3px;
+         padding: 0 14px; min-height: 40px; cursor: pointer; }
+  .btn:hover { background: var(--red-dark); }
+  .btn.ghost { background: #fff; color: var(--red); }
+  .btn.ghost:hover { background: #fbeaea; }
+
+  .suggest { position: absolute; top: 100%; left: 0; right: 0; margin: 2px 0 0; padding: 0; list-style: none;
+             background: #fff; border: 1px solid #bbb; border-radius: 3px; box-shadow: 0 6px 18px rgba(0,0,0,.12);
+             max-height: 300px; overflow-y: auto; z-index: 30; }
+  .suggest li { padding: 8px 10px; cursor: pointer; display: flex; justify-content: space-between; gap: 10px; }
+  .suggest li[aria-selected=true], .suggest li:hover { background: #fbeaea; }
+  .suggest .n { color: var(--ink-3); font-size: 13px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .suggest mark { background: none; color: var(--red); font-weight: 700; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 0 0; min-height: 10px; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; background: var(--panel); border: 1px solid var(--rule);
+          border-radius: 16px; padding: 3px 4px 3px 10px; font-size: 13px; font-weight: 600; }
+  .chip .key { width: 14px; height: 3px; border-radius: 2px; }
+  .chip button { border: 0; background: none; cursor: pointer; font-size: 16px; line-height: 1; color: var(--ink-2);
+                 width: 24px; height: 24px; border-radius: 12px; }
+  .chip button:hover { background: #e4e4e4; color: var(--ink); }
+  .hint { font-size: 13px; color: var(--ink-3); }
+
+  /* Section headings in the site's "section label" style */
+  .sec { margin: 26px 0 10px; border-top: 3px solid var(--ink); padding-top: 6px; }
+  .sec h2 { margin: 0; font-size: 22px; line-height: 1.2; }
+  .sec p { margin: 2px 0 0; color: var(--ink-2); font-size: 14px; }
+
+  /* Stat tiles */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+  .tile { background: var(--panel); border-top: 3px solid var(--red); padding: 10px 12px 12px; }
+  .tile .lbl { font-size: 12px; color: var(--ink-2); font-weight: 600; }
+  .tile .val { font-size: 30px; font-weight: 700; line-height: 1.15; margin-top: 2px; }
+  .tile .sub { font-size: 13px; color: var(--ink-2); }
+  .up { color: var(--up); } .down { color: var(--down); }
+
+  /* Cards */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .card { min-width: 0; }
+  .card h3 { margin: 0 0 2px; font-size: 18px; }
+  .card .desc { margin: 0 0 8px; color: var(--ink-2); font-size: 13px; }
+  .chart { position: relative; height: 300px; }
+  .chart.tall { height: 340px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--ink-2); margin: 0 0 6px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 16px; height: 3px; border-radius: 2px; display: inline-block; }
+
+  /* Ranked lists (overview) */
+  .rank { list-style: none; margin: 0; padding: 0; }
+  .rank li { border-bottom: 1px solid var(--grid); }
+  .rank button { all: unset; box-sizing: border-box; width: 100%; cursor: pointer; display: grid;
+                 grid-template-columns: 1fr auto; gap: 2px 10px; padding: 7px 4px; }
+  .rank button:hover, .rank button:focus-visible { background: #fbeaea; }
+  .rank button:focus-visible { outline: 2px solid var(--red); }
+  .rank .nm { font-weight: 600; font-size: 14px; }
+  .rank .v { font-weight: 700; font-size: 14px; text-align: right; font-variant-numeric: tabular-nums; }
+  .rank .bar { grid-column: 1 / -1; height: 6px; background: var(--grid); border-radius: 3px; overflow: hidden; }
+  .rank .bar i { display: block; height: 100%; border-radius: 3px; }
+  .rank .meta { font-size: 12px; color: var(--ink-3); }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { padding: 7px 8px; border-bottom: 1px solid var(--grid); text-align: right; font-variant-numeric: tabular-nums; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-2);
+             border-bottom: 2px solid var(--ink); }
+  .tablewrap { overflow-x: auto; }
+  details summary { cursor: pointer; font-weight: 700; color: var(--red); font-size: 14px; padding: 6px 0; }
+
+  .note { font-size: 12px; color: var(--ink-3); margin-top: 22px; border-top: 1px solid var(--rule); padding-top: 10px; }
+  .empty { padding: 30px 0; color: var(--ink-2); }
+  .hidden { display: none !important; }
+
+  @media (max-width: 720px) {
+    .grid2 { grid-template-columns: 1fr; }
+    .masthead h1 { font-size: 24px; }
+    .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .tile { padding: 8px 10px 10px; }
+    .tile .val { font-size: 22px; }
+    .field.search { flex-basis: 100%; }
+    .chart, .chart.tall { height: 260px; }
+    .filters { position: static; }
+    select { min-width: 0; flex: 1; }
+    .field.sel { flex: 1 1 140px; }
+  }
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="wrap">
+    <span class="kicker">Data</span>
+    <h1>UNL majors tracker</h1>
+    <p>Search any University of Nebraska–Lincoln major to see how its enrollment has changed, Fall 2016 to Fall 2025.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="filters" role="search">
+    <div class="field search">
+      <label for="q">Search a major</label>
+      <input id="q" type="search" autocomplete="off" placeholder="e.g. Journalism, Computer Science, Accounting…"
+             role="combobox" aria-expanded="false" aria-controls="suggest" aria-autocomplete="list">
+      <ul id="suggest" class="suggest hidden" role="listbox" aria-label="Matching majors"></ul>
+    </div>
+    <div class="field sel">
+      <label for="level">Level</label>
+      <select id="level">
+        <option value="all">All students</option>
+        <option value="0">Undergraduate</option>
+        <option value="1">Graduate &amp; professional</option>
+      </select>
+    </div>
+    <div class="field sel">
+      <label for="college">College</label>
+      <select id="college"><option value="all">All colleges</option></select>
+    </div>
+    <button id="reset" class="btn ghost" type="button">Reset</button>
+  </div>
+  <div class="chips" id="chips" aria-live="polite"></div>
+
+  <!-- OVERVIEW (no major selected) -->
+  <section id="overview">
+    <div class="sec"><h2 id="ov-title">Universitywide enrollment</h2><p id="ov-sub"></p></div>
+    <div class="tiles" id="ov-tiles"></div>
+
+    <div class="sec"><h2>Total students by fall semester</h2><p>Students counted by their first major at each fall census.</p></div>
+    <div class="chart"><canvas id="ov-chart" role="img" aria-label="Line chart of total UNL enrollment by fall semester"></canvas></div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="sec"><h2>Biggest gains</h2><p id="gain-sub"></p></div>
+        <ol class="rank" id="gainers"></ol>
+      </div>
+      <div class="card">
+        <div class="sec"><h2>Biggest declines</h2><p id="loss-sub"></p></div>
+        <ol class="rank" id="losers"></ol>
+      </div>
+    </div>
+
+    <div class="sec"><h2 id="top-title">Largest majors</h2><p>Click any major to see its trend.</p></div>
+    <ol class="rank" id="top"></ol>
+  </section>
+
+  <!-- DETAIL (major selected) -->
+  <section id="detail" class="hidden">
+    <div class="sec"><h2 id="d-title"></h2><p id="d-sub"></p></div>
+    <div class="tiles" id="d-tiles"></div>
+
+    <div id="d-body">
+    <div class="sec"><h2>Enrollment over time</h2><p id="trend-sub">Students with this as their first major each fall. Add up to two more majors to compare.</p></div>
+    <div class="legend" id="trend-legend"></div>
+    <div class="chart tall"><canvas id="trend-chart" role="img" aria-label="Line chart of enrollment over time"></canvas></div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="sec"><h2>Share of all students</h2><p id="share-sub">Percent of UNL students in this major. Corrects for the university growing or shrinking overall.</p></div>
+        <div class="legend" id="share-legend"></div>
+        <div class="chart"><canvas id="share-chart" role="img" aria-label="Line chart of share of all students"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="sec"><h2 id="mix-title">Degree breakdown</h2><p id="mix-sub"></p></div>
+        <div class="chart"><canvas id="mix-chart" role="img" aria-label="Bar chart of students by college and degree"></canvas></div>
+      </div>
+    </div>
+
+    <div class="sec"><h2>Year by year</h2></div>
+    <div class="tablewrap"><table id="d-table"></table></div>
+    </div>
+  </section>
+
+  <p class="note" id="note"></p>
+</main>
+
+<script>
+(() => {
+  "use strict";
+  const COLORS = ["#ba1f1f", "#2a78d6", "#eda100"];
+  const POINTS = ["circle", "rectRot", "triangle"];   // secondary encoding beside color
+  const DASH   = [[], [], []];
+  const INK = "#222222", INK2 = "#555555", INK3 = "#767676", GRID = "#ececec";
+
+  const $ = (s) => document.querySelector(s);
+  const el = (tag, props = {}, ...kids) => {
+    const e = document.createElement(tag);
+    for (const [k, v] of Object.entries(props)) {
+      if (k === "class") e.className = v;
+      else if (k === "style") e.style.cssText = v;
+      else if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
+      else e.setAttribute(k, v);
+    }
+    for (const k of kids) if (k != null) e.append(k instanceof Node ? k : document.createTextNode(String(k)));
+    return e;
+  };
+  const fmt = (n) => n == null ? "—" : Math.round(n).toLocaleString("en-US");
+  const pct = (n, d = 1) => n == null || !isFinite(n) ? "—" : (n * 100).toFixed(d) + "%";
+  const signed = (n) => n == null ? "—" : (n > 0 ? "+" : n < 0 ? "−" : "±") + Math.abs(Math.round(n)).toLocaleString("en-US");
+  const signedPct = (n) => n == null || !isFinite(n) ? "—" : (n > 0 ? "+" : n < 0 ? "−" : "±") + Math.abs(n * 100).toFixed(0) + "%";
+
+  // Title-case the registrar's ALL-CAPS names, keeping acronyms.
+  const KEEP = new Set(["PGA","CASNR","UNO","MBA","MPA","II","III","K-12","PK-12","ESL","UNL","US","USA","TESOL","ROTC","STEM","LGBTQ","AG"]);
+  const SMALL = new Set(["and","or","of","the","in","for","to","a","an","on","at","with"]);
+  const title = (s) => s.split(/(\s+|\/|-|\()/).map((w, i) => {
+    if (!/[A-Za-z]/.test(w)) return w;
+    if (KEEP.has(w.toUpperCase()) && w.toUpperCase() !== "AG") return w.toUpperCase();
+    const lw = w.toLowerCase();
+    if (i > 0 && SMALL.has(lw)) return lw;
+    return lw.charAt(0).toUpperCase() + lw.slice(1);
+  }).join("");
+
+  let D, YEARS, N_YEARS, FIRST, LAST;
+  const state = { level: "all", college: "all", selected: [] };   // selected = major indexes, [0] is primary
+  const charts = {};
+
+  // ---------- data access ----------
+  const passes = (r) => (state.level === "all" || r[3] === +state.level) &&
+                        (state.college === "all" || r[2] === +state.college);
+  function series(mi) {        // counts by year (null when the program had no students in scope)
+    const out = new Array(N_YEARS).fill(null);
+    for (const r of D.byMajor[mi]) if (passes(r)) out[r[0]] = (out[r[0]] || 0) + r[5];
+    return out;
+  }
+  function scopeTotals() {
+    if (state.level === "all" && state.college === "all") return D.totals.slice();
+    const t = new Array(N_YEARS).fill(0);
+    for (const r of D.rows) if (passes(r)) t[r[0]] += r[5];
+    return t;
+  }
+  const scopeLabel = () => {
+    const parts = [];
+    if (state.level !== "all") parts.push(state.level === "1" ? "graduate & professional" : "undergraduate");
+    if (state.college !== "all") parts.push(D.colleges[+state.college]);
+    return parts.length ? parts.join(", ") : "";
+  };
+  const firstIdx = (s) => s.findIndex((v) => v != null);
+  const lastIdx = (s) => { for (let i = s.length - 1; i >= 0; i--) if (s[i] != null) return i; return -1; };
+
+  // ---------- search ----------
+  const q = $("#q"), sug = $("#suggest");
+  let matches = [], active = -1;
+  const norm = (s) => s.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ").trim();
+  function findMajors(text) {
+    const t = norm(text);
+    if (!t) return [];
+    const words = t.split(" ");
+    const res = [];
+    D.majors.forEach((m, i) => {
+      const hay = D.normNames[i];
+      if (!words.every((w) => hay.includes(w))) return;
+      const s = series(i); const li = lastIdx(s);
+      if (li < 0) return;
+      const score = (hay.startsWith(t) ? 0 : hay.includes(t) ? 1 : 2);
+      res.push({ i, score, latest: s[li], year: YEARS[li] });
+    });
+    res.sort((a, b) => a.score - b.score || (b.year - a.year) || b.latest - a.latest);
+    return res.slice(0, 12);
+  }
+  function renderSuggest() {
+    sug.replaceChildren();
+    if (!matches.length) {
+      if (q.value.trim()) sug.append(el("li", { "aria-disabled": "true" }, el("span", { class: "hint" }, "No majors match. Try a shorter word.")));
+      else { closeSuggest(); return; }
+    }
+    matches.forEach((m, k) => {
+      const nm = title(D.majors[m.i]);
+      const li = el("li", { role: "option", id: "opt-" + k, "aria-selected": k === active ? "true" : "false",
+        onmousedown: (e) => { e.preventDefault(); pick(m.i); } },
+        el("span", {}, nm),
+        el("span", { class: "n" }, fmt(m.latest) + " in " + m.year));
+      sug.append(li);
+    });
+    sug.classList.remove("hidden"); q.setAttribute("aria-expanded", "true");
+    if (active >= 0) q.setAttribute("aria-activedescendant", "opt-" + active); else q.removeAttribute("aria-activedescendant");
+  }
+  function closeSuggest() { sug.classList.add("hidden"); q.setAttribute("aria-expanded", "false"); active = -1; }
+  q.addEventListener("input", () => { matches = findMajors(q.value); active = matches.length ? 0 : -1; renderSuggest(); });
+  q.addEventListener("focus", () => { if (q.value.trim()) { matches = findMajors(q.value); renderSuggest(); } });
+  q.addEventListener("blur", () => setTimeout(closeSuggest, 100));
+  q.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowDown") { e.preventDefault(); active = Math.min(matches.length - 1, active + 1); renderSuggest(); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); active = Math.max(0, active - 1); renderSuggest(); }
+    else if (e.key === "Enter") { e.preventDefault(); if (matches[active]) pick(matches[active].i); }
+    else if (e.key === "Escape") closeSuggest();
+  });
+  function pick(mi) {
+    q.value = ""; closeSuggest();
+    if (!state.selected.includes(mi)) {
+      if (state.selected.length >= 3) state.selected.pop();
+      state.selected.push(mi);
+    }
+    render(); q.blur();
+  }
+  function choose(mi) { state.selected = [mi]; render(); scrollToTop(); }
+
+  // ---------- filters ----------
+  $("#level").addEventListener("change", (e) => { state.level = e.target.value; render(); });
+  $("#college").addEventListener("change", (e) => { state.college = e.target.value; render(); });
+  $("#reset").addEventListener("click", () => {
+    state.level = "all"; state.college = "all"; state.selected = [];
+    $("#level").value = "all"; $("#college").value = "all"; render();
+  });
+
+  function renderChips() {
+    const c = $("#chips"); c.replaceChildren();
+    if (!state.selected.length) { c.append(el("span", { class: "hint" }, "Pick a major above, or click one from the lists below.")); return; }
+    state.selected.forEach((mi, k) => {
+      c.append(el("span", { class: "chip" },
+        el("i", { class: "key", style: "background:" + COLORS[k] }),
+        title(D.majors[mi]),
+        el("button", { type: "button", "aria-label": "Remove " + title(D.majors[mi]),
+          onclick: () => { state.selected.splice(k, 1); render(); } }, "×")));
+    });
+    if (state.selected.length < 3) c.append(el("span", { class: "hint", style: "align-self:center" }, "Search again to compare another major."));
+  }
+
+  // ---------- charts ----------
+  Chart.defaults.font.family = '"Open Sans", Helvetica, Arial, sans-serif';
+  Chart.defaults.font.size = 12;
+  Chart.defaults.color = INK2;
+  const crosshair = {
+    id: "crosshair",
+    afterDatasetsDraw(chart) {
+      const a = chart.tooltip && chart.tooltip.getActiveElements();
+      if (!a || !a.length || chart.config.type !== "line") return;
+      const x = a[0].element.x, { top, bottom } = chart.chartArea, ctx = chart.ctx;
+      ctx.save(); ctx.strokeStyle = "#999"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bottom); ctx.stroke(); ctx.restore();
+    }
+  };
+  // Direct label at the end of each line (value only, in ink), skipping collisions.
+  const endLabels = {
+    id: "endLabels",
+    afterDatasetsDraw(chart, _a, opts) {
+      if (!opts || !opts.on) return;
+      const ctx = chart.ctx, placed = [];
+      ctx.save(); ctx.font = '700 12px "Open Sans", Arial, sans-serif'; ctx.fillStyle = INK; ctx.textBaseline = "middle";
+      chart.data.datasets.forEach((ds, di) => {
+        const meta = chart.getDatasetMeta(di); if (meta.hidden) return;
+        let i = ds.data.length - 1; while (i >= 0 && ds.data[i] == null) i--;
+        if (i < 0) return;
+        const p = meta.data[i]; const y = p.y;
+        if (placed.some((py) => Math.abs(py - y) < 14)) return;
+        placed.push(y);
+        const txt = opts.format(ds.data[i]);
+        ctx.textAlign = "left"; ctx.fillText(txt, p.x + 8, y);
+      });
+      ctx.restore();
+    }
+  };
+  const tooltipBase = {
+    backgroundColor: "#fff", borderColor: "#ccc", borderWidth: 1, titleColor: INK2, bodyColor: INK,
+    titleFont: { weight: "600", size: 12 }, bodyFont: { weight: "700", size: 13 }, padding: 10,
+    usePointStyle: true, boxWidth: 8, boxHeight: 8, caretSize: 0, cornerRadius: 3,
+  };
+  const yearLabels = () => YEARS.map((y) => "Fall " + y);
+  const axisNum = (v) => Math.abs(v) >= 10000 ? (v / 1000).toLocaleString("en-US") + "K" : v.toLocaleString("en-US");
+
+  function lineChart(id, datasets, { yFmt = axisNum, tipFmt = fmt, endFmt = fmt, beginAtZero = true, fill = false } = {}) {
+    const ctx = document.getElementById(id);
+    const cfg = {
+      type: "line",
+      data: { labels: yearLabels(), datasets: datasets.map((d, k) => ({
+        label: d.label, data: d.data, borderColor: d.color, backgroundColor: d.fill ? d.color + "1a" : d.color,
+        fill: d.fill ? "origin" : false, borderWidth: 2, borderJoinStyle: "round", borderCapStyle: "round",
+        pointStyle: d.point || "circle", pointRadius: 4, pointHoverRadius: 6, pointBackgroundColor: d.color,
+        pointBorderColor: "#fff", pointBorderWidth: 2, pointHitRadius: 14, spanGaps: false, tension: 0,
+      })) },
+      options: {
+        responsive: true, maintainAspectRatio: false, animation: { duration: 250 },
+        interaction: { mode: "index", intersect: false },
+        layout: { padding: { right: 56, top: 8 } },
+        scales: {
+          x: { grid: { display: false }, border: { color: "#bbb" }, ticks: { color: INK2, maxRotation: 0, autoSkipPadding: 10,
+               callback(v) { const l = this.getLabelForValue(v); return window.innerWidth < 560 ? "’" + l.slice(-2) : l.replace("Fall ", ""); } } },
+          y: { beginAtZero, grid: { color: GRID }, border: { display: false }, ticks: { color: INK2, callback: yFmt, maxTicksLimit: 6 } },
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: { ...tooltipBase, callbacks: {
+            label: (c) => " " + (c.raw == null ? "—" : tipFmt(c.raw)) + "  " + c.dataset.label,
+          } },
+          endLabels: { on: true, format: endFmt },
+        },
+      },
+      plugins: [crosshair, endLabels],
+    };
+    if (charts[id]) charts[id].destroy();
+    charts[id] = new Chart(ctx, cfg);
+  }
+
+  function barChart(id, labels, values, color, tipExtra) {
+    const ctx = document.getElementById(id);
+    if (charts[id]) charts[id].destroy();
+    charts[id] = new Chart(ctx, {
+      type: "bar",
+      data: { labels, datasets: [{ data: values, backgroundColor: color, hoverBackgroundColor: "#d24a4a",
+        borderRadius: { topRight: 4, bottomRight: 4 }, borderSkipped: "start", maxBarThickness: 22, categoryPercentage: .8, barPercentage: .9 }] },
+      options: {
+        indexAxis: "y", responsive: true, maintainAspectRatio: false, animation: { duration: 250 },
+        layout: { padding: { right: 44 } },
+        scales: {
+          x: { beginAtZero: true, grid: { color: GRID }, border: { display: false }, ticks: { maxTicksLimit: 5, callback: axisNum } },
+          y: { grid: { display: false }, border: { color: "#bbb" }, ticks: { color: INK, autoSkip: false,
+               callback(v) { const l = this.getLabelForValue(v); return l.length > 30 ? l.slice(0, 29) + "…" : l; } } },
+        },
+        plugins: { legend: { display: false },
+          tooltip: { ...tooltipBase, callbacks: { title: (c) => c[0].label, label: (c) => " " + fmt(c.raw) + " students" + (tipExtra ? tipExtra(c.dataIndex) : "") } } },
+      },
+      plugins: [{ id: "barVals", afterDatasetsDraw(chart) {
+        const c = chart.ctx; c.save(); c.font = '700 12px "Open Sans", Arial'; c.fillStyle = INK; c.textBaseline = "middle";
+        chart.getDatasetMeta(0).data.forEach((b, i) => c.fillText(fmt(values[i]), b.x + 6, b.y)); c.restore();
+      } }],
+    });
+  }
+
+  function legend(id, items) {
+    const box = document.getElementById(id); box.replaceChildren();
+    if (items.length < 2) return;
+    items.forEach((it) => box.append(el("span", {}, el("i", { style: "background:" + it.color }), it.label)));
+  }
+
+  function tile(label, value, sub, cls) {
+    return el("div", { class: "tile" }, el("div", { class: "lbl" }, label),
+      el("div", { class: "val" + (cls ? " " + cls : "") }, value), sub ? el("div", { class: "sub" }, sub) : null);
+  }
+
+  // ---------- overview ----------
+  function renderOverview() {
+    const tot = scopeTotals(), sc = scopeLabel();
+    $("#ov-title").textContent = sc ? "Enrollment: " + sc.charAt(0).toUpperCase() + sc.slice(1) : "Universitywide enrollment";
+    $("#ov-sub").textContent = "Fall " + FIRST + " to Fall " + LAST + (sc ? ", filtered to " + sc : ", all colleges and levels") + ".";
+    const peakI = tot.indexOf(Math.max(...tot));
+    const ch = tot[N_YEARS - 1] - tot[0];
+    const active = D.majors.map((_, i) => series(i)[N_YEARS - 1]).filter((v) => v != null).length;
+    $("#ov-tiles").replaceChildren(
+      tile("Students, Fall " + LAST, fmt(tot[N_YEARS - 1])),
+      tile("Change since Fall " + FIRST, signed(ch), signedPct(ch / tot[0]), ch >= 0 ? "up" : "down"),
+      tile("Peak year", "Fall " + YEARS[peakI], fmt(tot[peakI]) + " students"),
+      tile("Majors with students, " + LAST, fmt(active)),
+    );
+    lineChart("ov-chart", [{ label: "Students", data: tot, color: COLORS[0], fill: false }], { beginAtZero: false });
+
+    // movers: compare first available year in window to latest, among programs with real size
+    const rows = D.majors.map((m, i) => {
+      const s = series(i); const a = s[0], b = s[N_YEARS - 1];
+      return { i, a, b, s };
+    });
+    const both = rows.filter((r) => r.a != null && r.b != null && Math.max(r.a, r.b) >= 40);
+    const gain = both.slice().sort((x, y) => (y.b - y.a) - (x.b - x.a)).filter((r) => r.b > r.a).slice(0, 8);
+    const loss = both.slice().sort((x, y) => (x.b - x.a) - (y.b - y.a)).filter((r) => r.b < r.a).slice(0, 8);
+    $("#gain-sub").textContent = "Change in students, Fall " + FIRST + " to Fall " + LAST + ".";
+    $("#loss-sub").textContent = "Change in students, Fall " + FIRST + " to Fall " + LAST + ".";
+    const maxG = Math.max(1, ...gain.map((r) => r.b - r.a)), maxL = Math.max(1, ...loss.map((r) => r.a - r.b));
+    const rankItem = (r, val, w, color, meta) => el("li", {}, el("button", { type: "button", onclick: () => choose(r.i) },
+      el("span", { class: "nm" }, title(D.majors[r.i])), el("span", { class: "v" }, val),
+      el("span", { class: "bar" }, el("i", { style: "width:" + Math.max(2, w * 100) + "%;background:" + color })),
+      el("span", { class: "meta" }, meta)));
+    const fill = (id, list, fn) => { const o = $(id); o.replaceChildren(); if (!list.length) o.append(el("li", { class: "empty" }, "No majors in this filter.")); list.forEach((r) => o.append(fn(r))); };
+    fill("#gainers", gain, (r) => rankItem(r, signed(r.b - r.a), (r.b - r.a) / maxG, "#1d7a3e", fmt(r.a) + " → " + fmt(r.b) + (r.a >= 20 ? " (" + signedPct((r.b - r.a) / r.a) + ")" : "")));
+    fill("#losers", loss, (r) => rankItem(r, signed(r.b - r.a), (r.a - r.b) / maxL, "#ba1f1f", fmt(r.a) + " → " + fmt(r.b) + (r.a >= 20 ? " (" + signedPct((r.b - r.a) / r.a) + ")" : "")));
+
+    const top = rows.filter((r) => r.b != null).sort((x, y) => y.b - x.b).slice(0, 15);
+    const maxT = top.length ? top[0].b : 1;
+    $("#top-title").textContent = "Largest majors, Fall " + LAST;
+    fill("#top", top, (r) => rankItem(r, fmt(r.b), r.b / maxT, "#333333",
+      pct(r.b / tot[N_YEARS - 1]) + " of students" + (r.a == null ? " · new since " + FIRST : r.a < 20 ? " · up from " + fmt(r.a) + " in " + FIRST : " · " + signedPct((r.b - r.a) / r.a) + " since " + FIRST)));
+  }
+
+  // ---------- detail ----------
+  function renderDetail() {
+    const tot = scopeTotals(), sc = scopeLabel();
+    const sel = state.selected.map((mi, k) => ({ mi, k, name: title(D.majors[mi]), s: series(mi), color: COLORS[k], point: POINTS[k] }));
+    const p = sel[0], s = p.s;
+    $("#d-title").textContent = p.name;
+    const colleges = [...new Set(D.byMajor[p.mi].filter(passes).map((r) => D.colleges[r[2]]))];
+    $("#d-sub").textContent = (colleges.length ? "Offered through " + colleges.join(", ") : "No students in this filter") + (sc ? " · Filtered to " + sc : "") + ".";
+
+    const fi = firstIdx(s), li = lastIdx(s);
+    if (fi < 0) {
+      $("#d-tiles").replaceChildren(el("p", { class: "empty" }, "No students in this major match the current filters. Try “All colleges” or “All students.”"));
+    } else {
+      const latest = s[li], first = s[fi], ch = latest - first;
+      const prev = li > 0 ? s[li - 1] : null;
+      const vals = s.map((v, i) => ({ v, i })).filter((o) => o.v != null);
+      const peak = vals.reduce((a, b) => (b.v > a.v ? b : a));
+      // rank among majors in latest year (within scope)
+      const latestAll = D.majors.map((_, i) => series(i)[N_YEARS - 1]).filter((v) => v != null).sort((a, b) => b - a);
+      const rank = li === N_YEARS - 1 ? latestAll.indexOf(latest) + 1 : null;
+      $("#d-tiles").replaceChildren(
+        tile("Students, Fall " + YEARS[li], fmt(latest), prev != null ? signed(latest - prev) + " vs. Fall " + YEARS[li - 1] : (li !== N_YEARS - 1 ? "No students reported after " + YEARS[li] : null)),
+        tile("Change since Fall " + YEARS[fi], fi === li ? "—" : signed(ch), fi === li ? "Only one year of data" : first < 20 ? "From " + fmt(first) + " students" : signedPct(ch / first), fi === li ? "" : ch >= 0 ? "up" : "down"),
+        tile("Peak year", "Fall " + YEARS[peak.i], fmt(peak.v) + " students"),
+        tile("Share of students, " + YEARS[li], pct(latest / tot[li], 2), rank ? "No. " + rank + " of " + latestAll.length + " majors" : null),
+      );
+    }
+
+    const anyData = sel.some((x) => firstIdx(x.s) >= 0);
+    $("#d-body").classList.toggle("hidden", !anyData);
+    if (!anyData) return;
+    const multi = sel.length > 1;
+    $("#trend-sub").textContent = "Students with this as their first major each fall. Gaps mean the program had no students that year." + (sel.length < 3 ? " Search again to compare up to three majors." : "");
+    const legItems = sel.map((x) => ({ label: x.name, color: x.color }));
+    legend("trend-legend", legItems); legend("share-legend", legItems);
+    lineChart("trend-chart", sel.map((x) => ({ label: x.name, data: x.s, color: x.color, point: x.point, fill: !multi })), {});
+    lineChart("share-chart", sel.map((x) => ({ label: x.name, data: x.s.map((v, i) => v == null ? null : v / tot[i]), color: x.color, point: x.point })),
+      { yFmt: function (v) { return (v * 100).toFixed(this.max < 0.02 ? 2 : 1) + "%"; }, tipFmt: (v) => pct(v, 2), endFmt: (v) => pct(v, 1) });
+
+    // breakdown: latest year with data, by college + degree
+    const yi = li < 0 ? N_YEARS - 1 : li;
+    const parts = D.byMajor[p.mi].filter((r) => r[0] === yi && passes(r))
+      .map((r) => ({ label: (r[3] ? "Grad · " : "") + D.colleges[r[2]] + " · " + r[4], n: r[5] }))
+      .sort((a, b) => b.n - a.n);
+    $("#mix-title").textContent = (multi ? p.name + ": " : "Breakdown, ") + "Fall " + YEARS[yi];
+    $("#mix-sub").textContent = parts.length > 1 ? "Students by college and degree code." : "All students in one college and degree.";
+    const mixBox = document.getElementById("mix-chart").parentElement;
+    mixBox.style.height = Math.max(160, parts.length * 34 + 50) + "px";
+    barChart("mix-chart", parts.map((x) => x.label), parts.map((x) => x.n), "#333333");
+
+    // table
+    const t = $("#d-table"); t.replaceChildren();
+    const head = el("tr", {}, el("th", { scope: "col" }, "Fall"));
+    sel.forEach((x) => { head.append(el("th", { scope: "col" }, x.name)); if (!multi) { head.append(el("th", { scope: "col" }, "Change")); } head.append(el("th", { scope: "col" }, multi ? "Share" : "Share of students")); });
+    t.append(el("thead", {}, head));
+    const body = el("tbody");
+    for (let i = N_YEARS - 1; i >= 0; i--) {
+      const tr = el("tr", {}, el("td", {}, String(YEARS[i])));
+      sel.forEach((x) => {
+        const v = x.s[i], pv = i > 0 ? x.s[i - 1] : null;
+        tr.append(el("td", {}, fmt(v)));
+        if (!multi) {
+          const d = v != null && pv != null ? v - pv : null;
+          tr.append(el("td", { class: d > 0 ? "up" : d < 0 ? "down" : "" }, d == null ? "—" : signed(d)));
+        }
+        tr.append(el("td", {}, v == null ? "—" : pct(v / tot[i], 2)));
+      });
+      body.append(tr);
+    }
+    t.append(body);
+  }
+
+  // ---------- render / URL state ----------
+  function writeHash() {
+    const h = new URLSearchParams();
+    if (state.selected.length) h.set("major", state.selected.map((i) => D.majors[i]).join("|"));
+    if (state.level !== "all") h.set("level", state.level);
+    if (state.college !== "all") h.set("college", D.colleges[+state.college]);
+    const str = h.toString();
+    history.replaceState(null, "", str ? "#" + str : location.pathname + location.search);
+  }
+  function readHash() {
+    const h = new URLSearchParams(location.hash.slice(1));
+    const ms = (h.get("major") || "").split("|").map((m) => D.majors.indexOf(m.toUpperCase())).filter((i) => i >= 0);
+    state.selected = ms.slice(0, 3);
+    if (h.get("level") === "0" || h.get("level") === "1") state.level = h.get("level");
+    const ci = D.colleges.indexOf(h.get("college") || "");
+    if (ci >= 0) state.college = String(ci);
+    $("#level").value = state.level; $("#college").value = state.college;
+  }
+  function render() {
+    renderChips();
+    const has = state.selected.length > 0;
+    $("#overview").classList.toggle("hidden", has);
+    $("#detail").classList.toggle("hidden", !has);
+    if (has) renderDetail(); else renderOverview();
+    writeHash();
+  }
+
+  // Tell a parent CMS page how tall we are, for auto-sizing iframes.
+  function postHeight() {
+    if (window.parent === window) return;
+    const h = Math.ceil(document.body.getBoundingClientRect().height);
+    window.parent.postMessage({ type: "unl-majors-height", height: h }, "*");
+  }
+  function scrollToTop() {
+    if (window.parent !== window) window.parent.postMessage({ type: "unl-majors-scrolltop" }, "*");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  new ResizeObserver(postHeight).observe(document.body);
+
+  fetch("majors.json").then((r) => r.json()).then((data) => {
+    D = data; YEARS = D.years; N_YEARS = YEARS.length; FIRST = YEARS[0]; LAST = YEARS[N_YEARS - 1];
+    D.byMajor = D.majors.map(() => []);
+    for (const r of D.rows) D.byMajor[r[1]].push(r);
+    D.normNames = D.majors.map(norm);
+    const cs = $("#college");
+    D.colleges.map((c, i) => ({ c, i })).sort((a, b) => a.c.localeCompare(b.c))
+      .forEach(({ c, i }) => cs.append(el("option", { value: String(i) }, c)));
+    $("#note").textContent = "Source: " + D.source + ". Counts are students by first major at each fall census. " +
+      "“Business Administration” is combined with its later name, “Business.” Graduate programs are grouped under their parent college. " +
+      "Programs that were renamed or recoded may appear as separate majors.";
+    readHash(); render();
+    window.addEventListener("hashchange", () => { readHash(); render(); });
+  }).catch((err) => {
+    $("#overview").replaceChildren(el("p", { class: "empty" }, "Couldn’t load the data. Please refresh the page."));
+    console.error(err);
+  });
+})();
+</script>
+</body>
+</html>
