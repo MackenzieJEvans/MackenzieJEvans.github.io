@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Election Count Up | Daily Nebraskan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --dn-red: #ba1f1f;        /* Daily Nebraskan section-title red */
+    --dn-red-rule: #cb5757;   /* lighter rule under section titles */
+    --dn-dark: #333333;       /* nav bar / body text */
+    --dn-gray: #f2f2f2;
+    --tile: #990000;          /* blank tile color */
+    --tile-edge: #6b0000;
+    --tile-frame: #d9a3a3;
+    --correct: #2e7d32;
+    --font-body: "Open Sans", Arial, sans-serif;
+    --font-head: "Roboto Condensed", "Arial Narrow", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: #fff;
+    color: var(--dn-dark);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  /* ---------- Masthead (Daily Nebraskan style) ---------- */
+  .topbar {
+    background: var(--dn-gray);
+    border-bottom: 1px solid #ddd;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    padding: 6px 16px;
+    color: #555;
+  }
+  .masthead {
+    text-align: center;
+    padding: 22px 16px 16px;
+  }
+  .masthead .logo {
+    font-family: "Times New Roman", Times, serif;
+    font-size: clamp(30px, 6vw, 52px);
+    font-weight: 700;
+    letter-spacing: -.01em;
+    color: #000;
+    margin: 0;
+    line-height: 1;
+  }
+  .masthead .tag {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #666;
+  }
+  .navbar {
+    background: var(--dn-dark);
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    display: flex;
+    gap: 22px;
+    justify-content: center;
+    padding: 10px 16px;
+    flex-wrap: wrap;
+  }
+  .navbar span.active { border-bottom: 3px solid var(--dn-red); padding-bottom: 2px; }
+
+  /* ---------- Main ---------- */
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+  }
+  .block-title {
+    background: var(--dn-red);
+    border-bottom: 3px solid var(--dn-red-rule);
+    color: #fff;
+    font-family: var(--font-head);
+    font-size: 24px;
+    font-weight: 700;
+    padding: 6px 14px;
+    margin: 0 0 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .block-title small {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    opacity: .95;
+  }
+  .intro { color: #555; margin: 0 0 22px; }
+
+  .progress {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 26px;
+  }
+  .progress div {
+    flex: 1;
+    height: 6px;
+    background: #e3e3e3;
+  }
+  .progress div.done { background: var(--dn-red); }
+  .progress div.current { background: var(--dn-red-rule); }
+
+  .kicker {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--dn-red);
+    letter-spacing: .04em;
+    margin-bottom: 6px;
+  }
+  .question {
+    font-family: var(--font-head);
+    font-size: clamp(22px, 3.6vw, 32px);
+    line-height: 1.2;
+    color: #111;
+    margin: 0 0 26px;
+  }
+
+  /* ---------- Tile board ---------- */
+  .board-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 22px;
+  }
+  .board {
+    --n: 3;
+    --gap: clamp(3px, .8vw, 8px);
+    display: grid;
+    grid-template-columns: repeat(var(--n), var(--size));
+    gap: var(--gap);
+    padding: var(--gap);
+    background: var(--tile-frame);
+    border: 2px solid var(--tile-edge);
+    box-shadow: 0 2px 6px rgba(0,0,0,.18);
+    cursor: text;
+    /* tile size shrinks so 15 letters still fit on a phone */
+    --size: min(56px, calc((min(100vw, 960px) - 32px - 8px - (var(--n) + 1) * var(--gap)) / var(--n)));
+  }
+  .board:focus-within { outline: 3px solid #222; outline-offset: 3px; }
+  .tile {
+    width: var(--size);
+    height: calc(var(--size) * 1.15);
+    background: var(--tile);
+    border: 2px solid #fff;
+    box-shadow: inset 0 0 0 2px var(--tile-edge);
+    color: #fff;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: calc(var(--size) * .58);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    user-select: none;
+    transition: background .2s;
+  }
+  .tile.cursor { box-shadow: inset 0 0 0 2px var(--tile-edge), inset 0 -4px 0 0 #fff; }
+  .tile.hint { color: #ffd7d7; }
+  .tile.correct { background: var(--correct); box-shadow: inset 0 0 0 2px #1b5e20; }
+  .tile.revealed { background: #555; box-shadow: inset 0 0 0 2px #333; }
+  .tile.pop { animation: pop .25s ease; }
+  @keyframes pop { 50% { transform: scale(1.12); } }
+  .board.shake { animation: shake .4s; }
+  @keyframes shake {
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+
+  /* hidden input that brings up mobile keyboards */
+  #entry {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+  }
+
+  .feedback {
+    min-height: 24px;
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+  .feedback.good { color: var(--correct); }
+  .feedback.bad { color: var(--tile); }
+
+  .actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  button {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    padding: 10px 18px;
+    border-radius: 2px;
+    cursor: pointer;
+    border: 1px solid var(--dn-dark);
+    background: #fff;
+    color: var(--dn-dark);
+  }
+  button:hover { background: var(--dn-gray); }
+  button.primary {
+    background: var(--dn-red);
+    border-color: #8f1717;
+    color: #fff;
+  }
+  button.primary:hover { background: #a31b1b; }
+  button:disabled { opacity: .4; cursor: default; }
+  button:focus-visible { outline: 3px solid #222; outline-offset: 2px; }
+
+  .score {
+    text-align: center;
+    margin-top: 28px;
+    font-size: 13px;
+    color: #666;
+  }
+  .score b { color: var(--dn-dark); }
+
+  /* ---------- Final screen ---------- */
+  .final { text-align: center; padding: 20px 0; }
+  .final .big {
+    font-family: var(--font-head);
+    font-size: 64px;
+    color: var(--dn-red);
+    line-height: 1;
+    margin: 10px 0;
+  }
+  .recap {
+    text-align: left;
+    max-width: 640px;
+    margin: 24px auto;
+    border-top: 1px solid #ddd;
+  }
+  .recap li {
+    list-style: none;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .recap ul { padding: 0; margin: 0; }
+  .recap .ans { font-weight: 700; white-space: nowrap; }
+  .recap .ok { color: var(--correct); }
+  .recap .miss { color: #888; }
+
+  footer {
+    background: var(--dn-dark);
+    color: #ccc;
+    font-size: 12px;
+    text-align: center;
+    padding: 18px 16px;
+  }
+
+  @media (max-width: 520px) {
+    .navbar { gap: 14px; font-size: 12px; }
+    .block-title { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">Student voice of the University of Nebraska-Lincoln since 1901</div>
+<header class="masthead">
+  <p class="logo">Daily Nebraskan</p>
+  <div class="tag">Games &amp; Puzzles</div>
+</header>
+<nav class="navbar" aria-label="Sections">
+  <span>News</span><span>Sports</span><span>Culture</span><span>Opinion</span><span class="active">Games</span>
+</nav>
+
+<main>
+  <h1 class="block-title">Election Count Up <small id="counter">Question 1 of 14</small></h1>
+  <p class="intro">Each answer is one letter longer than the last. Start with three letters and count up to sixteen. Type your answer into the tiles and press Enter.</p>
+
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <section id="game">
+    <div class="kicker" id="kicker">3 letters</div>
+    <h2 class="question" id="question"></h2>
+
+    <div class="board-wrap">
+      <div class="board" id="board" role="group" aria-label="Answer tiles" tabindex="-1"></div>
+    </div>
+    <input id="entry" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Type your answer">
+
+    <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+
+    <div class="actions">
+      <button class="primary" id="checkBtn">Check</button>
+      <button id="hintBtn">Hint letter</button>
+      <button id="revealBtn">Reveal</button>
+      <button class="primary" id="nextBtn" hidden>Next question</button>
+    </div>
+
+    <div class="score">Score: <b id="score">0</b> points</div>
+  </section>
+
+  <section id="final" class="final" hidden>
+    <div class="kicker">You counted all the way up</div>
+    <div class="big" id="finalScore">0</div>
+    <div>points · <span id="finalCorrect">0</span> of 14 solved</div>
+    <div class="recap"><ul id="recap"></ul></div>
+    <button class="primary" id="restartBtn">Play again</button>
+  </section>
+</main>
+
+<footer>Daily Nebraskan · Lincoln, Nebraska</footer>
+
+<script>
+// Questions and answers from "Text based word game count up_ Election count up - Sheet1.csv"
+const QUESTIONS = [
+  ["What is the acronym used by the conservative party?", "GOP"],
+  ["What were you supposed to do on November 3rd?", "VOTE"],
+  ["Democrat, James Talarico, was elected as a senator from which state?", "TEXAS"],
+  ["Who was re-elected as Nebraska governor?", "PILLEN"],
+  ["New Mexico just elected the first Native American woman governor. What is her last name?", "HAALAND"],
+  ["Which election just happened?", "MIDTERMS"],
+  ["Who has the senate and house majority?", "DEMOCRATS"],
+  ["Xavier Becerra is the governor of which western state?", "CALIFORNIA"],
+  ["This southern state has a senate race that has not been called yet between Colom(D) and Hyde-Smith(R)?", "MISSISSIPPI"],
+  ["Which Democratic senator was re-elected in Colorado?", "HICKENLOOPER"],
+  ["What amount of the senate is required to vote for impeachment to convict a president?", "SUPERMAJORITY"],
+  ["Redistricting voting maps in order to gain more votes toward one party is called?", "GERRYMANDERING"],
+  ["What describes treaties or relations between local, state and federal government?", "INTERGOVERNMENT"],
+  ["Something that does not abide by the constitution is ___?", "UNCONSTITUTIONAL"],
+];
+
+const $ = (id) => document.getElementById(id);
+const board = $("board"), entry = $("entry");
+
+let idx = 0, score = 0, letters = [], hints = new Set(), solved = false;
+let results = [];
+
+function buildProgress() {
+  $("progress").innerHTML = QUESTIONS.map((_, i) =>
+    `<div class="${i < idx ? "done" : i === idx ? "current" : ""}"></div>`).join("");
+}
+
+function loadQuestion() {
+  const [q, a] = QUESTIONS[idx];
+  letters = Array(a.length).fill("");
+  hints = new Set();
+  solved = false;
+  $("question").textContent = q;
+  $("kicker").textContent = `${a.length} letters`;
+  $("counter").textContent = `Question ${idx + 1} of ${QUESTIONS.length}`;
+  $("feedback").textContent = "";
+  $("feedback").className = "feedback";
+  board.style.setProperty("--n", a.length);
+  board.innerHTML = a.split("").map(() => `<div class="tile"></div>`).join("");
+  $("checkBtn").hidden = $("hintBtn").hidden = $("revealBtn").hidden = false;
+  $("nextBtn").hidden = true;
+  buildProgress();
+  render();
+  focusEntry();
+}
+
+function cursorPos() {
+  const i = letters.findIndex((l) => l === "");
+  return i === -1 ? letters.length : i;
+}
+
+function render() {
+  const tiles = board.children;
+  const cur = cursorPos();
+  for (let i = 0; i < tiles.length; i++) {
+    tiles[i].textContent = letters[i];
+    tiles[i].classList.toggle("hint", hints.has(i) && !solved);
+    tiles[i].classList.toggle("cursor", !solved && i === cur);
+  }
+}
+
+function focusEntry() {
+  entry.value = "";
+  entry.focus({ preventScroll: true });
+}
+
+function typeLetter(ch) {
+  if (solved) return;
+  const i = cursorPos();
+  if (i >= letters.length) return;
+  letters[i] = ch;
+  board.children[i].classList.remove("pop");
+  void board.children[i].offsetWidth;
+  board.children[i].classList.add("pop");
+  render();
+}
+
+function backspace() {
+  if (solved) return;
+  for (let i = letters.length - 1; i >= 0; i--) {
+    if (letters[i] && !hints.has(i)) { letters[i] = ""; break; }
+  }
+  render();
+}
+
+function check() {
+  if (solved) return;
+  const answer = QUESTIONS[idx][1];
+  if (letters.some((l) => !l)) {
+    showFeedback(`Fill in all ${answer.length} letters first.`, "bad");
+    return;
+  }
+  if (letters.join("") === answer) {
+    const pts = Math.max(answer.length - hints.size, 1);
+    score += pts;
+    finish(true, `Correct! +${pts} points`);
+  } else {
+    showFeedback("Not quite. Try again.", "bad");
+    board.classList.remove("shake");
+    void board.offsetWidth;
+    board.classList.add("shake");
+  }
+}
+
+function hint() {
+  if (solved) return;
+  const answer = QUESTIONS[idx][1];
+  const open = [];
+  for (let i = 0; i < answer.length; i++) if (letters[i] !== answer[i]) open.push(i);
+  if (!open.length) return;
+  const i = open[0];
+  letters[i] = answer[i];
+  hints.add(i);
+  render();
+  showFeedback("Hints cost one point each.", "");
+  if (open.length === 1) check();
+}
+
+function reveal() {
+  if (solved) return;
+  letters = QUESTIONS[idx][1].split("");
+  finish(false, `The answer was ${QUESTIONS[idx][1]}.`);
+}
+
+function finish(correct, msg) {
+  solved = true;
+  results.push({ q: QUESTIONS[idx][0], a: QUESTIONS[idx][1], correct });
+  render();
+  [...board.children].forEach((t, i) => {
+    setTimeout(() => t.classList.add(correct ? "correct" : "revealed"), i * 45);
+  });
+  showFeedback(msg, correct ? "good" : "bad");
+  $("score").textContent = score;
+  $("checkBtn").hidden = $("hintBtn").hidden = $("revealBtn").hidden = true;
+  $("nextBtn").hidden = false;
+  $("nextBtn").textContent = idx === QUESTIONS.length - 1 ? "See results" : "Next question";
+  $("nextBtn").focus();
+}
+
+function next() {
+  idx++;
+  if (idx >= QUESTIONS.length) return showFinal();
+  loadQuestion();
+}
+
+function showFinal() {
+  $("game").hidden = true;
+  $("final").hidden = false;
+  $("counter").textContent = "Final";
+  buildProgress();
+  $("finalScore").textContent = score;
+  $("finalCorrect").textContent = results.filter((r) => r.correct).length;
+  $("recap").innerHTML = results.map((r) =>
+    `<li><span>${r.q}</span><span class="ans ${r.correct ? "ok" : "miss"}">${r.a}</span></li>`).join("");
+}
+
+function restart() {
+  idx = 0; score = 0; results = [];
+  $("score").textContent = 0;
+  $("final").hidden = true;
+  $("game").hidden = false;
+  loadQuestion();
+}
+
+function showFeedback(msg, kind) {
+  $("feedback").textContent = msg;
+  $("feedback").className = "feedback " + kind;
+}
+
+// Input: the hidden field catches typing on desktop and phone keyboards
+entry.addEventListener("input", () => {
+  for (const ch of entry.value.toUpperCase()) if (/[A-Z]/.test(ch)) typeLetter(ch);
+  entry.value = "";
+});
+entry.addEventListener("keydown", (e) => {
+  if (e.key === "Backspace") { e.preventDefault(); backspace(); }
+  else if (e.key === "Enter") { e.preventDefault(); solved ? next() : check(); }
+});
+board.addEventListener("click", focusEntry);
+document.addEventListener("keydown", (e) => {
+  if (document.activeElement === entry || e.target.tagName === "BUTTON" || e.metaKey || e.ctrlKey) return;
+  if (/^[a-z]$/i.test(e.key) || e.key === "Backspace") { focusEntry(); }
+});
+
+$("checkBtn").onclick = () => { check(); focusEntry(); };
+$("hintBtn").onclick = () => { hint(); if (!solved) focusEntry(); };
+$("revealBtn").onclick = reveal;
+$("nextBtn").onclick = next;
+$("restartBtn").onclick = restart;
+
+loadQuestion();
+</script>
+</body>
+</html>
