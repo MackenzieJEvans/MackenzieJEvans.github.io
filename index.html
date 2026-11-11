@@ -52,35 +52,24 @@
     margin-top: 18px;
   }
 
-
-  
-  ul.topnav {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #35353c;
-}
-
-ul.topnav li {float: left;}
-
-ul.topnav li a {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
-
-ul.topnav li a:hover:not(.active) {background-color: #15151c;}
-
-ul.topnav li a.active {background-color: #e5e5ec;}
-
-ul.topnav li.right {float: right;}
-
-
-
-  
+  nav.topnav {
+    display: flex;
+    gap: 28px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+  nav.topnav a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 12px 2px;
+    border-bottom: 2px solid transparent;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  nav.topnav a:hover { color: var(--ink); }
+  nav.topnav a.active { color: var(--ink); border-color: var(--ink); }
 
   nav.links a {
     text-decoration: none;
@@ -167,13 +156,13 @@ ul.topnav li.right {float: right;}
 </head>
 <body>
 
-<ul class="topnav">
-  <li><a class="active" href="#home">About</a></li>
-  <li><a href="#news">News</a></li>
-  <li><a href="#contact">Other</a></li>
-</ul>
-  
 <div class="wrap">
+
+  <nav class="topnav">
+    <a class="active" href="index.html">About</a>
+    <a href="news.html">News</a>
+    <a href="other.html">Other</a>
+  </nav>
 
   <header class="hero">
     <h1>Mackenzie Evans</h1>
