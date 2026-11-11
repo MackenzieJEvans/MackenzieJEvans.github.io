@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Cone Zone: Lincoln</title>
+<title>Cone Zone: Lincoln | Daily Nebraskan</title>
 <meta name="description" content="A maze game about Lincoln, Nebraska road construction: collect fuel, dodge traffic cones, pick your vehicle.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#12151c; --panel:#1c212b; --panel2:#252b37; --line:#333b4a;
@@ -79,13 +79,65 @@
   .legend canvas{width:28px;height:28px}
   .keys{color:var(--muted);font-size:12.5px}
   kbd{font:600 11px Archivo;border:1px solid var(--line);border-radius:4px;padding:1px 5px;background:#11141a;color:var(--ink)}
+
+  /* ---------- Daily Nebraskan branding (preview) ---------- */
+  :root{ --dn-red:#ba1f1f; --dn-red-rule:#cb5757; --dn-dark:#333; --dn-gray:#f2f2f2;
+         --font-body:"Open Sans",Arial,sans-serif; --font-head:"Roboto Condensed","Arial Narrow",sans-serif; }
+  html,body{background:#fff;color:var(--dn-dark);font-family:var(--font-body)}
+  body{display:block;padding:0}
+  a{color:var(--dn-red)}
+  .topbar{background:var(--dn-gray);border-bottom:1px solid #ddd;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.02em;padding:6px 16px;color:#555}
+  .masthead{text-align:center;padding:22px 16px 16px}
+  .masthead .logo{font-family:"Times New Roman",Times,serif;font-size:clamp(30px,6vw,52px);font-weight:700;letter-spacing:-.01em;color:#000;margin:0;line-height:1}
+  .masthead .tag{margin-top:6px;font-size:12px;color:#666}
+  .navbar{background:var(--dn-dark);color:#fff;font-weight:700;font-size:13px;text-transform:uppercase;display:flex;gap:22px;justify-content:center;padding:10px 16px;flex-wrap:wrap}
+  .navbar span.active{border-bottom:3px solid var(--dn-red);padding-bottom:2px}
+  .wrap{margin:0 auto;padding:24px 16px 40px;max-width:608px}
+  header{display:block;margin-bottom:14px}
+  .block-title{background:var(--dn-red);border-bottom:3px solid var(--dn-red-rule);color:#fff;font-family:var(--font-head);font-size:24px;font-weight:700;padding:6px 14px;margin:0 0 12px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+  .block-title small{font-family:var(--font-body);font-size:13px;font-weight:600;opacity:.95}
+  .sub{color:#555;font-size:14px;line-height:1.5;margin:0}
+  .hud{background:var(--dn-gray);border:1px solid #ddd;border-bottom:0;border-radius:0}
+  .stat{color:#666;font-weight:700;font-size:12px;text-transform:uppercase}
+  .stat b{font-family:var(--font-head);color:#111;font-size:18px}
+  .fuel-label{color:#666}
+  .bar{background:#fff;border-color:#ccc}
+  .siren{color:#666}
+  .siren b{color:var(--dn-red)}
+  .stage{border:1px solid #333;border-radius:0}
+  .overlay h2{font-family:var(--font-head);text-transform:uppercase;letter-spacing:.02em}
+  .overlay p{font-family:var(--font-body)}
+  .card{border-radius:4px}
+  .card.sel{border-color:var(--dn-red-rule)}
+  .card .nm{font-family:var(--font-head);font-size:15px}
+  .pips span i.f{background:var(--dn-red-rule)}
+  .btn{background:var(--dn-red);color:#fff;border-radius:3px;font-family:var(--font-body)}
+  .btn.ghost{color:#fff;border-color:#888}
+  .big{font-family:var(--font-head);color:#fff}
+  .tools button{background:#fff;color:#333;border-color:#ccc;border-radius:3px;font-family:var(--font-body)}
+  .dpad button,.sbtn{background:#fff;color:#333;border-color:#ccc}
+  .dpad button:active,.sbtn:active{background:var(--dn-gray)}
+  .sbtn{background:var(--dn-red);color:#fff;border-color:var(--dn-red)}
+  .info{background:#fff;border:0;border-top:3px solid var(--dn-red);border-radius:0;color:#333;padding:12px 0 0}
+  .info h3{font-family:var(--font-head);color:var(--dn-red);text-transform:uppercase;font-size:16px}
+  .keys{color:#666}
+  kbd{background:var(--dn-gray);color:#333;border-color:#ccc}
+  .dn-footer{color:#888;font-size:12px;text-align:center;padding:18px 16px;border-top:1px solid #ddd}
 </style>
 </head>
 <body>
+<div class="topbar">Student voice of the University of Nebraska-Lincoln since 1901</div>
+<header class="masthead">
+  <p class="logo">Daily Nebraskan</p>
+  <div class="tag">Games &amp; Puzzles</div>
+</header>
+<nav class="navbar" aria-label="Sections">
+  <span>News</span><span>Sports</span><span>Culture</span><span>Opinion</span><span class="active">Games</span>
+</nav>
 <div class="wrap">
   <header>
     <div>
-      <h1>CONE <span>ZONE</span>: LINCOLN</h1>
+      <h1 class="block-title">Cone Zone: Lincoln <small>Construction detour game</small></h1>
       <p class="sub">Downtown Lincoln is one big work zone. Keep your tank full and dodge the cones. This game demonstrates the detours students, truck drivers and other people need to take to get to campus. Read more: <a href="https://www.dailynebraskan.com/news/o-street-road-closure-forces-unl-students-to-adjust-to-new-routes/article_85f38951-9f6f-45ba-bf72-c234501b9c1c.html" target="_blank" rel="noopener">Daily Nebraskan O Street Closures</a></p>
     </div>
   </header>
@@ -158,6 +210,7 @@
     <p class="keys">Street grid is a stylized take on downtown Lincoln, not to scale.</p>
   </section>
 </div>
+<footer class="dn-footer">Daily Nebraskan · Lincoln, Nebraska</footer>
 
 <script>
 (() => {
