@@ -73,6 +73,23 @@
   p.lead { color: var(--ink); font-size: 1rem; }
   .placeholder { color: var(--muted); font-style: italic; }
 
+   .projects-grid {
+    display: grid;
+    gap: 14px;
+  }
+  .project-card {
+    display: block;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    text-decoration: none;
+    background: var(--panel);
+    transition: border-color .15s ease;
+  }
+  .project-card:hover { border-color: var(--accent); }
+  .project-card .p-title { font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .project-card .p-desc { color: var(--muted); font-size: 0.9rem; }
+
   footer {
     color: var(--muted);
     font-size: 0.82rem;
