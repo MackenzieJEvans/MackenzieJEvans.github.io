@@ -64,6 +64,22 @@
   margin-right: 16px;
   border: none;
   font-size: 17px;
+ background-color: #34363c;
+}
+
+topnav .search-container button {
+  float: right;
+  padding: 6px;
+  margin-top: 8px;
+  margin-right: 16px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+
+.topnav .search-container button:hover {
+  background: #c5c5cc;
 }
 
 @media screen and (max-width: 600px) {
@@ -121,7 +137,8 @@
     <a href="index.html">About</a>
      <a href="Articles.html">Portfolio</a>
     <a class="active" href="other.html">Other</a>
-    <input type="text" placeholder="Search..">
+    <input type="text" placeholder="Search...">
+    <button type="submit">Submit</button>
   </nav>
 
   <header class="hero">
