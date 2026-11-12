@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Other &middot; Mackenzie Evans</title>
+<meta name="description" content="More from Mackenzie Evans.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #15151c;
+    --panel: #18181c;
+    --border: #38383c;
+    --ink: #e5e5ec;
+    --muted: #c8c8cc;
+    --accent: #e7e7ec;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+  }
+  body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1.6;
+  }
+  h1, h2, h3 {
+    font-family: "Space Grotesk", "Inter", sans-serif;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  a { color: var(--ink); }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 80px; }
+
+  nav.topnav {
+    display: flex;
+    gap: 28px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+  nav.topnav a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 12px 2px;
+    border-bottom: 2px solid transparent;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  nav.topnav a:hover { color: var(--ink); }
+  nav.topnav a.active { color: var(--ink); border-color: var(--ink); }
+
+  header.hero {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 48px;
+  }
+  header.hero h1 { font-size: clamp(2rem, 6vw, 2.8rem); margin: 0; letter-spacing: -0.01em; }
+  header.hero .tagline { font-size: 1.05rem; color: var(--muted); margin: 0; }
+
+  section { margin-bottom: 48px; }
+  section h2 {
+    font-size: 1.3rem;
+    margin: 0 0 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  p.lead { color: var(--ink); font-size: 1rem; }
+  .placeholder { color: var(--muted); font-style: italic; }
+
+  footer {
+    color: var(--muted);
+    font-size: 0.82rem;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    margin-top: 16px;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="topnav">
+    <a href="index.html">About</a>
+     <a href="Articles.html">Portfolio</a>
+    <a class="active" href="other.html">Other</a>
+  </nav>
+
+  <header class="hero">
+    <h1>Voter turnout low in Thurston and Dakota counties</h1>
+  </header>
+
+  <section id="body">
+
+<p>By Mackenzie Evans</p>
+
+<p>In Northeast Nebraska, Thurston and Dakota counties have had the lowest voter turnouts in the state from 2020 to 2026, with Thurston County frequently recording the lowest turnout.</p>
+
+<p>Thurston County is also home to the reservations of the Winnebago and Omaha tribes of Nebraska. According to the 2020 U.S. Census, the county is 60% Native American.</p>
+
+<p>Low voter turnout in Thurston County could mean the Native American vote is less equally represented in Nebraska.</p>
+
+<iframe title="Dakota and Thurston Counties have the lowest voter turnouts in the state" aria-label="Choropleth map" id="datawrapper-chart-qX03z" src="https://datawrapper.dwcdn.net/qX03z/1/" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="472" data-external="1"></iframe><script type="text/javascript">(function(){function e(){window.addEventListener(`message`,function(e){if(e.data[`datawrapper-height`]!==void 0){var t=document.querySelectorAll(`iframe`);for(var n in e.data[`datawrapper-height`])for(var r=0,i;i=t[r];r++)if(i.contentWindow===e.source){var a=e.data[`datawrapper-height`][n]+`px`;i.style.height=a}}})}e()})();</script>
+
+<p>“The tribal election in Macy happens the same day, and sometimes people vote in the tribal election and then forget to vote in the general election, and vice versa. And people not interested in voting, unfortunately,” said Steven Schneider, the Thurston County election commissioner.</p>
+
+<p>Low voter turnout is not a new issue in Thurston County.</p>
+
+<p>From 2021 to 2023, the Winnebago and Omaha tribes of Nebraska <a href="https://www.narf.org/nill/documents/20230119winnebago-thurston-nebraska-complaint.pdf">sued</a> Thurston County three times for Section 2 violations of the Voters Rights Act. These lawsuits all dealt with <a href="https://narf.org/cases/thurston-nebraska-redistricting/">redistricting</a> plans that would have diluted the Native American vote. The lawsuits were successful and led to re-negotiated districts.</p>
+
+<p>In 2024, State Sen. Jen Day of Omaha introduced <a href="https://nebraskalegislature.gov/FloorDocs/108/PDF/Intro/LB1262.pdf">LB 1262</a>. The purpose of the bill was to create a 14-person commission of tribal members, four from Thurston County, who would study election patterns and access on the reservations. However, this bill failed to advance in the state legislature.</p>
+
+<p>In addition, neither Thurston nor Dakota County votes entirely by mail. During the 2024 presidential election, counties that did fully vote by mail had higher voter turnouts.</p>
+
+<iframe title="Voting by mail allows rural Nebraskans more chance to vote" aria-label="Scatter Plot" id="datawrapper-chart-CxtGH" src="https://datawrapper.dwcdn.net/CxtGH/1/" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="467" data-external="1"></iframe><script type="text/javascript">(function(){function e(){window.addEventListener(`message`,function(e){if(e.data[`datawrapper-height`]!==void 0){var t=document.querySelectorAll(`iframe`);for(var n in e.data[`datawrapper-height`])for(var r=0,i;i=t[r];r++)if(i.contentWindow===e.source){var a=e.data[`datawrapper-height`][n]+`px`;i.style.height=a}}})}e()})();</script>
+
+<p>While voter turnout in Dakota County is still lower than most of the state, Cherie Conley, the Dakota County election commissioner, said that participation this year increased from previous years. Voter turnout increased from 34% in the 2022 midterm to 49% in this midterm.<br><br>She said turnout may have increased because of contested races for South Sioux City Mayor, city council and a school bond issue.</p>
+
+<p>Dakota County shifted 21% toward the Democratic party in the governor’s race and 23% towards the Democratic party in the attorney general’s race from its 2024 margin, according to data from the <a href="https://apnews.com/projects/elections-2026/nebraska-governor-results/">Associated Press</a>.</p>
+
+<p>Across the state, counties with more registered Republicans saw lower voter turnouts. For example, in Arthur County, where 89% of voters are registered as Republicans, voter turnout decreased by about 6%.</p>
+
+<p>In Thurston County only 38% of voters are registered as Republicans. In Dakota County, only 35% of voters are registered as Republicans. These two counties saw voter turnouts increase by about 10% for Thurston County and 15% for Dakota County.</p>
+
+<iframe title="Counties with more registered Republicans saw lower voter turnouts in 2026 than in 2022 midterm elections" aria-label="Scatter Plot" id="datawrapper-chart-slgje" src="https://datawrapper.dwcdn.net/slgje/1/" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="500" data-external="1"></iframe><script type="text/javascript">(function(){function e(){window.addEventListener(`message`,function(e){if(e.data[`datawrapper-height`]!==void 0){var t=document.querySelectorAll(`iframe`);for(var n in e.data[`datawrapper-height`])for(var r=0,i;i=t[r];r++)if(i.contentWindow===e.source){var a=e.data[`datawrapper-height`][n]+`px`;i.style.height=a}}})}e()})();</script>
+
+<iframe title="Increased voter turnout lead to increased Democratic shifts" aria-label="Scatter Plot" id="datawrapper-chart-dPkWl" src="https://datawrapper.dwcdn.net/dPkWl/1/" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="476" data-external="1"></iframe><script type="text/javascript">(function(){function e(){window.addEventListener(`message`,function(e){if(e.data[`datawrapper-height`]!==void 0){var t=document.querySelectorAll(`iframe`);for(var n in e.data[`datawrapper-height`])for(var r=0,i;i=t[r];r++)if(i.contentWindow===e.source){var a=e.data[`datawrapper-height`][n]+`px`;i.style.height=a}}})}e()})();</script>
+
+    
+  </section>
+
+  <footer>
+    &copy; <span id="year"></span> Mackenzie Evans
+  </footer>
+</div>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
