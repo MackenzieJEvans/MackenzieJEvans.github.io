@@ -89,6 +89,33 @@
   .project-card:hover { border-color: var(--accent); }
   .project-card .p-title { font-weight: 600; color: var(--ink); margin-bottom: 4px; }
   .project-card .p-desc { color: var(--muted); font-size: 0.9rem; }
+  .project-card[hidden] { display: none; }
+
+  /* Search bar */
+  nav.topnav { flex-wrap: wrap; align-items: center; row-gap: 0; }
+  nav.topnav form.search {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    padding: 6px 0;
+  }
+  nav.topnav form.search input {
+    width: 200px;
+    font: inherit;
+    font-size: 0.85rem;
+    color: var(--ink);
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+  }
+  nav.topnav form.search input::placeholder { color: #8a8a92; }
+  nav.topnav form.search input:focus { outline: none; border-color: var(--muted); }
+  @media (max-width: 560px) {
+    nav.topnav form.search { flex-basis: 100%; margin-left: 0; padding-bottom: 12px; }
+    nav.topnav form.search input { flex: 1; width: auto; }
+  }
+  /* End search bar */
 
   footer {
     color: var(--muted);
@@ -107,6 +134,9 @@
     <a href="index.html">About</a>
     <a class="active" href="Articles.html">Portfolio</a>
     <a href="other.html">Other</a>
+    <form class="search" role="search" onsubmit="return false">
+      <input type="search" id="article-search" placeholder="Search articles..." aria-label="Search articles">
+    </form>
   </nav>
 
   <header class="hero">
@@ -116,6 +146,7 @@
    <section id="Portfolio">
     <h2>Portfolio</h2>
       <p>I'm working on adding my portfolio to GitHub Pages, for now some still link to my WordPress (previous portfolio) and Nebraska News Service. </p>
+        <p id="no-results" class="placeholder" hidden>No articles match that search.</p>
         <div class="projects-grid">
 
      <a class="project-card" href="Voter_turnout_low_in_Thurston county.html">
@@ -155,6 +186,22 @@
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Live filter: hide article cards whose title or date don't match the search.
+  const box = document.getElementById('article-search');
+  const cards = document.querySelectorAll('#Portfolio .project-card');
+  const empty = document.getElementById('no-results');
+
+  box.addEventListener('input', () => {
+    const q = box.value.trim().toLowerCase();
+    let shown = 0;
+    cards.forEach(card => {
+      const match = card.textContent.toLowerCase().includes(q);
+      card.hidden = !match;
+      if (match) shown++;
+    });
+    empty.hidden = shown > 0;
+  });
 </script>
 </body>
 </html>
