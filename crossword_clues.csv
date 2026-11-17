@@ -1,0 +1,13 @@
+number,direction,row,col,length,answer,clue
+1,Across,1,6,4,BOYD,This rural county had the highest voter turnout in Nebraska in the 2026 midterm election
+5,Across,3,8,7,TURNOUT,The percent of eligible voters who voted in an election
+6,Across,4,1,6,DAKOTA,Northeast Nebraskan county home to South Sioux City
+10,Across,6,5,10,UNICAMERAL,"Nebraska's one-house, nonpartisan state legislature"
+11,Across,10,2,6,OSBORN,Opponent to main governor candidate
+12,Across,11,9,6,SENATE,"Upper chamber of the U.S. Congress, where Nebraska holds two seats"
+2,Down,1,9,7,DOUGLAS,"This is the most populated county in Nebraska, referred to as part of ""The Blue Dot"""
+3,Down,1,11,13,CONGRESSIONAL,Type of district; Nebraska is split into three of these for the U.S. House
+4,Down,2,1,7,MIDTERM,"Election held halfway through a presidential term, like the one in 2026"
+7,Down,4,5,8,THURSTON,Northeast Nebraskan county home to Winnebago and Omaha reservations
+8,Down,5,7,6,PILLEN,Re-elected governor of Nebraska
+9,Down,5,13,9,LANCASTER,"Nebraska county home to Lincoln, the state capital"

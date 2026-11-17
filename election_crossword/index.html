@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nebraska Election Crossword &middot; Mackenzie Evans</title>
+<meta name="description" content="A playable crossword about Nebraska counties, candidates and the 2026 midterm election.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #15151c;
+    --panel: #18181c;
+    --border: #38383c;
+    --ink: #e5e5ec;
+    --muted: #c8c8cc;
+    --cell: #f4f4f6;
+    --cell-ink: #15151c;
+    --word: #cfe0f5;
+    --focus: #f5d76e;
+    --wrong: #f2b8b8;
+    --right: #bfe3c4;
+    --size: min(38px, calc((100vw - 32px) / 14));
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.6; }
+  h1, h2 { font-family: "Space Grotesk", "Inter", sans-serif; font-weight: 700; }
+  a { color: var(--ink); }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 40px 16px 80px; }
+
+  nav.topnav { display: flex; gap: 28px; border-bottom: 1px solid var(--border); margin-bottom: 32px; }
+  nav.topnav a {
+    text-decoration: none; color: var(--muted); font-size: 0.85rem; letter-spacing: 0.04em;
+    text-transform: uppercase; padding: 12px 2px; border-bottom: 2px solid transparent;
+  }
+  nav.topnav a:hover { color: var(--ink); }
+
+  header h1 { font-size: clamp(1.8rem, 5vw, 2.4rem); margin: 0 0 6px; letter-spacing: -0.01em; }
+  header p { color: var(--muted); margin: 0 0 24px; }
+
+  .game { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; }
+  .board-col { flex: 0 0 auto; max-width: 100%; }
+
+  .current {
+    min-height: 3.2em; background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 12px; margin-bottom: 12px; font-size: 0.95rem;
+    width: calc(var(--size) * 14);
+    max-width: 100%;
+  }
+  .current b { font-family: "Space Grotesk", sans-serif; margin-right: 6px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(14, var(--size));
+    grid-auto-rows: var(--size);
+  }
+  .cell { position: relative; }
+  .cell.on { background: var(--cell); outline: 1px solid #55555c; }
+  .cell.word { background: var(--word); }
+  .cell.focus { background: var(--focus); }
+  .cell.wrong { background: var(--wrong); }
+  .cell.right { background: var(--right); }
+  .cell .num {
+    position: absolute; top: 1px; left: 2px; font-size: calc(var(--size) * 0.28);
+    line-height: 1; color: #44444c; pointer-events: none;
+  }
+  .cell input {
+    width: 100%; height: 100%; border: 0; background: transparent; padding: calc(var(--size) * 0.16) 0 0;
+    text-align: center; text-transform: uppercase; font: 600 calc(var(--size) * 0.52) "Inter", sans-serif;
+    color: var(--cell-ink); caret-color: transparent; outline: none; border-radius: 0;
+  }
+  .cell.revealed input { color: #2f5f9e; }
+
+  .buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  button {
+    font: 500 0.85rem "Inter", sans-serif; color: var(--ink); background: var(--panel);
+    border: 1px solid var(--border); border-radius: 6px; padding: 8px 14px; cursor: pointer;
+  }
+  button:hover { border-color: var(--muted); }
+
+  .msg { margin-top: 12px; min-height: 1.6em; color: var(--muted); }
+  .msg.win { color: #9fd8a8; font-weight: 600; }
+
+  .clues { flex: 1 1 300px; display: grid; gap: 24px; }
+  .clues h2 { font-size: 1.1rem; margin: 0 0 8px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .clues ol { list-style: none; margin: 0; padding: 0; }
+  .clues li {
+    padding: 6px 8px; border-radius: 6px; cursor: pointer; font-size: 0.92rem; color: var(--muted);
+    display: flex; gap: 8px;
+  }
+  .clues li b { color: var(--ink); min-width: 1.4em; font-family: "Space Grotesk", sans-serif; }
+  .clues li:hover { background: var(--panel); }
+  .clues li.active { background: #26324a; color: var(--ink); }
+  .clues li.done { text-decoration: line-through; opacity: 0.6; }
+
+  footer { color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--border); padding-top: 20px; margin-top: 48px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="topnav">
+    <a href="../index.html">About</a>
+    <a href="../Articles.html">Portfolio</a>
+    <a href="../other.html">Other</a>
+  </nav>
+
+  <header>
+    <h1>Nebraska Election Crossword</h1>
+    <p>Counties, candidates and the 2026 midterm. Click a square or a clue to start typing; click the same square again to switch direction.</p>
+  </header>
+
+  <div class="game">
+    <div class="board-col">
+      <div class="current" id="current" aria-live="polite"></div>
+      <div class="grid" id="grid" role="grid" aria-label="Crossword grid"></div>
+      <div class="buttons">
+        <button id="checkWord">Check word</button>
+        <button id="checkAll">Check puzzle</button>
+        <button id="revealWord">Reveal word</button>
+        <button id="revealAll">Reveal puzzle</button>
+        <button id="clear">Clear</button>
+      </div>
+      <div class="msg" id="msg" aria-live="polite"></div>
+    </div>
+
+    <div class="clues">
+      <div><h2>Across</h2><ol id="across"></ol></div>
+      <div><h2>Down</h2><ol id="down"></ol></div>
+    </div>
+  </div>
+
+  <footer>&copy; <span id="year"></span> Mackenzie Evans</footer>
+</div>
+
+<script>
+const ROWS = 13, COLS = 14;
+const WORDS = [
+  { n: 1,  d: "A", r: 0,  c: 5,  a: "BOYD",          clue: "This rural county had the highest voter turnout in Nebraska in the 2026 midterm election" },
+  { n: 5,  d: "A", r: 2,  c: 7,  a: "TURNOUT",       clue: "The percent of eligible voters who voted in an election" },
+  { n: 6,  d: "A", r: 3,  c: 0,  a: "DAKOTA",        clue: "Northeast Nebraskan county home to South Sioux City" },
+  { n: 10, d: "A", r: 5,  c: 4,  a: "UNICAMERAL",    clue: "Nebraska's one-house, nonpartisan state legislature" },
+  { n: 11, d: "A", r: 9,  c: 1,  a: "OSBORN",        clue: "Opponent to main governor candidate" },
+  { n: 12, d: "A", r: 10, c: 8,  a: "SENATE",        clue: "Upper chamber of the U.S. Congress, where Nebraska holds two seats" },
+  { n: 2,  d: "D", r: 0,  c: 8,  a: "DOUGLAS",       clue: "This is the most populated county in Nebraska, referred to as part of “The Blue Dot”" },
+  { n: 3,  d: "D", r: 0,  c: 10, a: "CONGRESSIONAL", clue: "Type of district; Nebraska is split into three of these for the U.S. House" },
+  { n: 4,  d: "D", r: 1,  c: 0,  a: "MIDTERM",       clue: "Election held halfway through a presidential term, like the one in 2026" },
+  { n: 7,  d: "D", r: 3,  c: 4,  a: "THURSTON",      clue: "Northeast Nebraskan county home to Winnebago and Omaha reservations" },
+  { n: 8,  d: "D", r: 4,  c: 6,  a: "PILLEN",        clue: "Re-elected governor of Nebraska" },
+  { n: 9,  d: "D", r: 4,  c: 12, a: "LANCASTER",     clue: "Nebraska county home to Lincoln, the state capital" },
+];
+
+const key = (r, c) => r * COLS + c;
+const cells = {};
+WORDS.forEach(w => {
+  w.cells = [];
+  [...w.a].forEach((ch, i) => {
+    const r = w.d === "A" ? w.r : w.r + i;
+    const c = w.d === "A" ? w.c + i : w.c;
+    const k = key(r, c);
+    cells[k] = cells[k] || { r, c, ans: ch, words: {} };
+    cells[k].words[w.d] = w;
+    w.cells.push(k);
+  });
+  cells[key(w.r, w.c)].num = w.n;
+});
+
+const grid = document.getElementById("grid");
+const inputs = {};
+for (let r = 0; r < ROWS; r++) {
+  for (let c = 0; c < COLS; c++) {
+    const k = key(r, c), div = document.createElement("div");
+    div.className = "cell";
+    if (cells[k]) {
+      div.classList.add("on");
+      if (cells[k].num) div.insertAdjacentHTML("beforeend", `<span class="num">${cells[k].num}</span>`);
+      const inp = document.createElement("input");
+      inp.maxLength = 1;
+      inp.autocomplete = "off";
+      inp.autocapitalize = "characters";
+      inp.spellcheck = false;
+      inp.setAttribute("aria-label", `Row ${r + 1}, column ${c + 1}`);
+      inp.dataset.k = k;
+      div.appendChild(inp);
+      inputs[k] = inp;
+      cells[k].el = div;
+    }
+    grid.appendChild(div);
+  }
+}
+
+const lists = { A: document.getElementById("across"), D: document.getElementById("down") };
+WORDS.slice().sort((a, b) => a.n - b.n).forEach(w => {
+  const li = document.createElement("li");
+  li.innerHTML = `<b>${w.n}</b><span>${w.clue} (${w.a.length})</span>`;
+  li.onclick = () => { dir = w.d; focusCell(firstEmpty(w)); };
+  w.li = li;
+  lists[w.d].appendChild(li);
+});
+
+let cur = null, dir = "A";
+const word = () => cells[cur].words[dir] || Object.values(cells[cur].words)[0];
+const firstEmpty = w => w.cells.find(k => !inputs[k].value) ?? w.cells[0];
+
+function focusCell(k) {
+  cur = +k;
+  if (!cells[cur].words[dir]) dir = dir === "A" ? "D" : "A";
+  inputs[cur].focus();
+  inputs[cur].select();
+  paint();
+}
+
+function paint() {
+  Object.values(cells).forEach(c => c.el.classList.remove("word", "focus"));
+  WORDS.forEach(w => w.li.classList.remove("active"));
+  if (cur === null) return;
+  const w = word();
+  w.cells.forEach(k => cells[k].el.classList.add("word"));
+  cells[cur].el.classList.add("focus");
+  w.li.classList.add("active");
+  document.getElementById("current").innerHTML = `<b>${w.n} ${w.d === "A" ? "Across" : "Down"}</b>${w.clue} (${w.a.length})`;
+}
+
+function step(delta) {
+  const w = word(), i = w.cells.indexOf(cur), j = i + delta;
+  if (j >= 0 && j < w.cells.length) focusCell(w.cells[j]);
+}
+
+function move(dr, dc) {
+  let r = cells[cur].r + dr, c = cells[cur].c + dc;
+  while (r >= 0 && r < ROWS && c >= 0 && c < COLS) {
+    if (cells[key(r, c)]) { focusCell(key(r, c)); return; }
+    r += dr; c += dc;
+  }
+}
+
+function setLetter(k, ch) {
+  inputs[k].value = ch;
+  cells[k].el.classList.remove("wrong", "right", "revealed");
+}
+
+function afterChange() {
+  WORDS.forEach(w => w.li.classList.toggle("done", w.cells.every(k => inputs[k].value)));
+  const msg = document.getElementById("msg");
+  const full = Object.keys(cells).every(k => inputs[k].value);
+  const solved = Object.keys(cells).every(k => inputs[k].value === cells[k].ans);
+  if (solved) { msg.textContent = "Solved! Nice work."; msg.className = "msg win"; }
+  else if (full) { msg.textContent = "The grid is full, but something's not quite right."; msg.className = "msg"; }
+  else { msg.textContent = ""; msg.className = "msg"; }
+}
+
+grid.addEventListener("mousedown", e => {
+  const inp = e.target.closest(".cell")?.querySelector("input");
+  if (!inp) return;
+  e.preventDefault();
+  if (+inp.dataset.k === cur) dir = dir === "A" ? "D" : "A";
+  focusCell(inp.dataset.k);
+});
+grid.addEventListener("focusin", e => {
+  if (e.target.tagName === "INPUT" && +e.target.dataset.k !== cur) focusCell(e.target.dataset.k);
+});
+
+grid.addEventListener("keydown", e => {
+  if (cur === null) return;
+  const k = e.key;
+  if (/^[a-zA-Z]$/.test(k) && !e.metaKey && !e.ctrlKey) {
+    e.preventDefault();
+    setLetter(cur, k.toUpperCase());
+    afterChange();
+    step(1);
+  } else if (k === "Backspace") {
+    e.preventDefault();
+    if (inputs[cur].value) setLetter(cur, "");
+    else { step(-1); setLetter(cur, ""); }
+    afterChange();
+  } else if (k === "Delete") {
+    e.preventDefault(); setLetter(cur, ""); afterChange();
+  } else if (k === "ArrowRight") { e.preventDefault(); dir = "A"; move(0, 1); }
+  else if (k === "ArrowLeft")  { e.preventDefault(); dir = "A"; move(0, -1); }
+  else if (k === "ArrowDown")  { e.preventDefault(); dir = "D"; move(1, 0); }
+  else if (k === "ArrowUp")    { e.preventDefault(); dir = "D"; move(-1, 0); }
+  else if (k === " ") { e.preventDefault(); dir = dir === "A" ? "D" : "A"; focusCell(cur); }
+  else if (k === "Tab") {
+    e.preventDefault();
+    const order = WORDS.slice().sort((a, b) => (a.d + String(a.n).padStart(2, "0")).localeCompare(b.d + String(b.n).padStart(2, "0")));
+    const i = order.indexOf(word());
+    const next = order[(i + (e.shiftKey ? -1 : 1) + order.length) % order.length];
+    dir = next.d; focusCell(firstEmpty(next));
+  }
+});
+
+// Mobile keyboards often skip keydown details, so also handle raw input.
+grid.addEventListener("input", e => {
+  const inp = e.target, k = +inp.dataset.k;
+  const ch = (inp.value.match(/[a-z]/i) || [""])[0].toUpperCase();
+  setLetter(k, ch);
+  afterChange();
+  if (ch) step(1);
+});
+
+function check(keys) {
+  keys.forEach(k => {
+    if (!inputs[k].value) return;
+    cells[k].el.classList.toggle("right", inputs[k].value === cells[k].ans);
+    cells[k].el.classList.toggle("wrong", inputs[k].value !== cells[k].ans);
+  });
+}
+function reveal(keys) {
+  keys.forEach(k => {
+    if (inputs[k].value !== cells[k].ans) {
+      setLetter(k, cells[k].ans);
+      cells[k].el.classList.add("revealed");
+    }
+  });
+  afterChange();
+}
+const allKeys = () => Object.keys(cells).map(Number);
+const needWord = fn => () => { if (cur === null) { document.getElementById("msg").textContent = "Select a word first."; return; } fn(word().cells); };
+
+document.getElementById("checkWord").onclick = needWord(check);
+document.getElementById("checkAll").onclick = () => check(allKeys());
+document.getElementById("revealWord").onclick = needWord(reveal);
+document.getElementById("revealAll").onclick = () => { if (confirm("Reveal the whole puzzle?")) reveal(allKeys()); };
+document.getElementById("clear").onclick = () => {
+  if (!confirm("Clear all your letters?")) return;
+  allKeys().forEach(k => setLetter(k, ""));
+  afterChange();
+};
+
+document.getElementById("year").textContent = new Date().getFullYear();
+focusCell(WORDS[0].cells[0]);
+</script>
+</body>
+</html>
