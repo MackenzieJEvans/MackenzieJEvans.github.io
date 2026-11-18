@@ -341,10 +341,19 @@ function moveEnt(e, dist, onCenter){
   let guard = 0;
   while (dist > 1e-6 && guard++ < 12){
     if (!e.dx && !e.dy){ onCenter(e); if (!e.dx && !e.dy) break; if (e.stall > 0) break; continue; }
-    const tx = e.dx > 0 ? Math.floor(e.x + 1e-6) + 1 : e.dx < 0 ? Math.ceil(e.x - 1e-6) - 1 : e.x;
-    const ty = e.dy > 0 ? Math.floor(e.y + 1e-6) + 1 : e.dy < 0 ? Math.ceil(e.y - 1e-6) - 1 : e.y;
+    // Sitting exactly on a center but pointed at a wall (e.g. reversed right on an
+    // intersection): re-run the center logic so it turns or stops instead of driving in.
+    if (Number.isInteger(e.x) && Number.isInteger(e.y) && !open(e.x+e.dx, e.y+e.dy, e.kind !== undefined, e)){
+      onCenter(e); if (e.stall > 0) break; continue;
+    }
+    // Next tile center ahead. No epsilon here: a position a hair short of a center
+    // (e.g. 11.9999999) must still stop at that center (12), not skip to the one after.
+    const tx = e.dx > 0 ? Math.floor(e.x) + 1 : e.dx < 0 ? Math.ceil(e.x) - 1 : e.x;
+    const ty = e.dy > 0 ? Math.floor(e.y) + 1 : e.dy < 0 ? Math.ceil(e.y) - 1 : e.y;
     const d = Math.abs(tx - e.x) + Math.abs(ty - e.y);
-    if (dist < d){ e.x += e.dx*dist; e.y += e.dy*dist; dist = 0; }
+    // Anything that would land within a hair of the center counts as arriving, so the
+    // center is always handled (wall check, turns) instead of being stepped onto silently.
+    if (dist < d - 1e-9){ e.x += e.dx*dist; e.y += e.dy*dist; dist = 0; }
     else {
       e.x = tx; e.y = ty; dist -= d;
       if (e.x < 0) e.x += COLS; else if (e.x > COLS-1) e.x -= COLS;
