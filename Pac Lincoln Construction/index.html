@@ -273,9 +273,9 @@ function exits(x, y){ let n = 0; for (const d of D) if (open(x+d[0], y+d[1])) n+
 
 // ---------- Vehicles ----------
 const VEHICLES = [
-  {id:'fire',    name:'Fire Truck', speed:6.8, drain:3.3, dmg:22, coneMul:1,    stall:false, oneHit:false,
-   blurb:'Fast! Press Space for siren and lights to cones pull over.', stats:[5,1,3]},
-  {id:'tractor', name:'Tractor',    speed:3.2, drain:3.3, dmg:10, coneMul:0.78, stall:false, oneHit:false,
+  {id:'fire',    name:'Fire Truck', speed:6.8, drain:3.7, dmg:22, coneMul:1,    stall:false, oneHit:false,
+   blurb:'Fast! Press Space for siren and lights to cones pull over.', stats:[5,2,3]},
+  {id:'tractor', name:'Tractor',    speed:3.2, drain:3.0, dmg:8, coneMul:0.5, stall:false, oneHit:false,
    blurb:'Slow, but sturdy', stats:[1,1,5]},
   {id:'sedan',   name:'Sedan',      speed:5.0, drain:0.8, dmg:25, coneMul:1,    stall:false, oneHit:false,
    blurb:'Average speed, good gas mileage.', stats:[3,5,2]},
