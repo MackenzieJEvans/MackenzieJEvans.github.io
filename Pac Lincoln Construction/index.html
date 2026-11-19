@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#15151c; --panel:#1f202c; --panel2:#282935; --line:#353949;
+    --bg:#15151c; --panel:#1f1f2a; --panel2:#25252c; --line:#373749;
     --ink:#e5e5ec; --muted:#85858c; --orange:#ff7a1a; --yellow:#ffd23f;
     --green:#3fb950; --red:#e5484d; --blue:#4c8dff;
   }
@@ -161,7 +161,7 @@
 
     <div class="overlay show" id="ovSelect">
       <h2>Choose your ride</h2>
-      <p>Yellow dots are fuel. Gas pumps fill you up and knock the cones over for a few seconds — plow through them for bonus points.</p>
+      <p>Yellow dots are fuel. Use the gas pumps to refuel and knock cones over.</p>
       <div class="cards" id="cards"></div>
       <button class="btn" id="startBtn">Start driving ▸</button>
     </div>
@@ -436,7 +436,7 @@ function startScare(sec){
   scareT = Math.max(scareT, sec); chain = 0;
   for (const c of cones) if (c.state === 'active' && !c.scared){ c.scared = true; c.dx = -c.dx; c.dy = -c.dy; }
 }
-const HIT_MSGS = ['Lane closed!','Detour ahead!','Merge left!','Road work!','One lane only!','Orange barrel season!','Flagger says STOP!','Pothole patrol!'];
+const HIT_MSGS = ['Lane closed!','Detour ahead!','Merge left!','Road work!','One lane only!','Orange barrel season!','STOP!','Pothole patrol!'];
 function locName(x, y){
   const c = wrapC(Math.round(x)), r = Math.round(y);
   const ew = EW[r], ns = NS[c];
