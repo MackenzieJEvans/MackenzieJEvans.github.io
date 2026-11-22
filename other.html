@@ -55,11 +55,19 @@
   nav.topnav a:hover { color: var(--ink); }
   nav.topnav a.active { color: var(--ink); border-color: var(--ink); }
 
+.hero-photo {
+  width: 200px;
+  aspect-ratio: 4 / 3;          /* forces the 3x4 shape */
+  object-fit: cover;            /* crops instead of stretching */
+  border-radius: 12px;          /* rounded corners */
+  border: 2px solid #e5e5ec;    /* light outline like the screenshot */
+  flex-shrink: 0;               /* stops the photo from getting squished */
+}
 
-  
-  
-
-  
+@media (max-width: 640px) {
+  header.hero { flex-direction: column; }
+  .hero-photo { width: 200px; }
+} 
   header.hero {
     display: flex;
     flex-direction: column;
@@ -113,12 +121,13 @@
   </nav>
 
   <header class="hero">
-    <h1>Photos, videos and news games</h1>
+    <h1>Photos, videos, news games and web projects</h1>
   </header>
 
   <section id="other">
     <h2>Photos</h2>
     <p class="placeholder">Content coming soon.</p>
+        <img class="hero-photo" src="clock_tower_night_zoom.JPG" alt="Photo taken by Mackenzie of a clock tower at night where she zoomed out whil on a low shutter speed. It looks like the white clock is projecting light into the night sky.">   <!-- 3. ADD the photo -->
   </section>
 
     <section id="other">
